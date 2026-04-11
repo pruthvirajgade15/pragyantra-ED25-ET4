@@ -1,5 +1,17 @@
+---
+title: ScholarshipHunter AI
+emoji: 🎓
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: true
+license: mit
+short_description: AI-powered scholarship discovery platform
+---
+
 # 🎓 ScholarshipHunter AI
-### Team Catalyst | Modern College of Engineering, Pune | PRAGYANTRA 2025
+### Team Catalyst | Modern College of Engineering, Pune | PRAGYANTRA 2026
 
 > **Find every scholarship you deserve. AI-powered. Auto-updated. 100% Free.**
 
