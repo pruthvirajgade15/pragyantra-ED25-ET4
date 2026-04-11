@@ -1,0 +1,255 @@
+"""Scholarships router — list, search, AI matching, save"""
+
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import and_, or_
+from typing import List, Optional
+from pydantic import BaseModel
+from datetime import datetime
+import os, httpx
+
+from database.db import get_db, Scholarship, StudentProfile, SavedScholarship, User
+from routers.auth import get_current_user
+
+router = APIRouter()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+
+# ── Schemas ───────────────────────────────────────────────────────────────────
+
+class ScholarshipOut(BaseModel):
+    id:           int
+    name:         str
+    provider:     str
+    amount:       str
+    deadline:     Optional[datetime]
+    eligibility:  str
+    category:     str
+    state:        str
+    field:        str
+    official_link: str
+    description:  str
+    source:       str
+    match_score:  Optional[float] = None
+    days_left:    Optional[int]   = None
+
+    class Config:
+        from_attributes = True
+
+
+class SaveRequest(BaseModel):
+    scholarship_id: int
+    match_score:    float = 0.0
+
+
+# ── AI Matching ───────────────────────────────────────────────────────────────
+
+async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Scholarship]) -> dict:
+    """Use Gemini AI to score scholarship matches 0-100"""
+    if not GEMINI_API_KEY:
+        return {}
+
+    schol_list = "\n".join([
+        f"ID:{s.id} | {s.name} | Category:{s.category} | State:{s.state} | "
+        f"Field:{s.field} | Income_limit:{s.income_limit} | Min%:{s.min_percentage} | "
+        f"Gender:{s.gender} | Disability:{s.disability_required}"
+        for s in scholarships[:30]
+    ])
+
+    prompt = f"""You are a scholarship eligibility expert for Indian students.
+
+Student Profile:
+- Category: {profile.category}
+- Annual Income: ₹{profile.annual_income}
+- Academic %: {profile.percentage}%
+- State: {profile.state}
+- Field of Study: {profile.field_of_study}
+- Gender: {profile.gender}
+- Disability: {profile.disability}
+- Is Minority: {profile.is_minority}
+- Current Year: {profile.current_year}
+
+Scholarships to evaluate:
+{schol_list}
+
+Return ONLY a JSON object like: {{"scholarship_id": score, ...}}
+Score 0-100 based on eligibility match. 100 = perfect match, 0 = ineligible.
+Consider all criteria strictly. No explanation, just JSON."""
+
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            res = await client.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}",
+                headers={"Content-Type": "application/json"},
+                json={"contents": [{"parts": [{"text": prompt}]}]}
+            )
+            data = res.json()
+            if res.status_code == 200:
+                text = data["candidates"][0]["content"]["parts"][0]["text"]
+                import json, re
+                match = re.search(r'\{.*\}', text, re.DOTALL)
+                if match:
+                    scores = json.loads(match.group())
+                    return {int(k): float(v) for k, v in scores.items()}
+            else:
+                print(f"Gemini API matching error: {data}")
+    except Exception as e:
+        print(f"AI matching error: {e}")
+    return {}
+
+
+def rule_based_score(profile: StudentProfile, s: Scholarship) -> float:
+    """Fast rule-based fallback scoring"""
+    score = 50.0
+
+    # Category match
+    if s.category not in ["All", "all"] and s.category != profile.category:
+        return 0.0
+    elif s.category == profile.category:
+        score += 25
+
+    # Income check
+    if s.income_limit and profile.annual_income and profile.annual_income > s.income_limit:
+        return 0.0
+    elif s.income_limit and profile.annual_income:
+        score += 15
+
+    # Percentage check
+    if s.min_percentage and profile.percentage and profile.percentage < s.min_percentage:
+        return 0.0
+    elif s.min_percentage and profile.percentage:
+        score += 10
+
+    # State match
+    if s.state not in ["All India", "All", "all"]:
+        if profile.state and profile.state.lower() in s.state.lower():
+            score += 10
+
+    # Field match
+    if s.field not in ["All", "all"]:
+        if profile.field_of_study and profile.field_of_study.lower() in s.field.lower():
+            score += 10
+
+    # Gender match
+    if s.gender and s.gender not in ["All", "all"]:
+        if profile.gender and s.gender.lower() != profile.gender.lower():
+            return 0.0
+
+    # Disability
+    if s.disability_required and not profile.disability:
+        return 0.0
+
+    return min(score, 100.0)
+
+
+# ── Endpoints ─────────────────────────────────────────────────────────────────
+
+@router.get("/", response_model=List[ScholarshipOut])
+async def list_scholarships(
+    category: Optional[str] = None,
+    state:    Optional[str] = None,
+    field:    Optional[str] = None,
+    search:   Optional[str] = None,
+    limit:    int = 50,
+    db: Session = Depends(get_db),
+):
+    q = db.query(Scholarship).filter(Scholarship.is_active == True)
+    if category: q = q.filter(or_(Scholarship.category == category, Scholarship.category == "All"))
+    if state:    q = q.filter(or_(Scholarship.state == state, Scholarship.state == "All India"))
+    if field:    q = q.filter(or_(Scholarship.field.ilike(f"%{field}%"), Scholarship.field == "All"))
+    if search:   q = q.filter(or_(Scholarship.name.ilike(f"%{search}%"), Scholarship.provider.ilike(f"%{search}%")))
+    scholarships = q.limit(limit).all()
+
+    now = datetime.utcnow()
+    result = []
+    for s in scholarships:
+        days_left = (s.deadline - now).days if s.deadline else None
+        result.append(ScholarshipOut(
+            id=s.id, name=s.name, provider=s.provider, amount=s.amount,
+            deadline=s.deadline, eligibility=s.eligibility, category=s.category,
+            state=s.state, field=s.field, official_link=s.official_link,
+            description=s.description, source=s.source, days_left=days_left
+        ))
+    return result
+
+
+@router.get("/matched", response_model=List[ScholarshipOut])
+async def matched_scholarships(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """AI-powered scholarship matching based on student profile"""
+    profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
+    if not profile:
+        raise Exception("Profile not found. Please complete your profile first.")
+
+    scholarships = db.query(Scholarship).filter(Scholarship.is_active == True).all()
+
+    # Try AI scoring, fall back to rule-based
+    ai_scores = await get_ai_match_scores(profile, scholarships)
+    now = datetime.utcnow()
+
+    result = []
+    for s in scholarships:
+        score = ai_scores.get(s.id) if ai_scores else None
+        if score is None:
+            score = rule_based_score(profile, s)
+        if score > 0:
+            days_left = (s.deadline - now).days if s.deadline else None
+            result.append(ScholarshipOut(
+                id=s.id, name=s.name, provider=s.provider, amount=s.amount,
+                deadline=s.deadline, eligibility=s.eligibility, category=s.category,
+                state=s.state, field=s.field, official_link=s.official_link,
+                description=s.description, source=s.source,
+                match_score=round(score, 1), days_left=days_left
+            ))
+
+    result.sort(key=lambda x: x.match_score or 0, reverse=True)
+    return result[:20]
+
+
+@router.post("/save")
+def save_scholarship(req: SaveRequest, db: Session = Depends(get_db),
+                     current_user: User = Depends(get_current_user)):
+    existing = db.query(SavedScholarship).filter(
+        SavedScholarship.user_id == current_user.id,
+        SavedScholarship.scholarship_id == req.scholarship_id
+    ).first()
+    if existing:
+        return {"message": "Already saved"}
+    saved = SavedScholarship(user_id=current_user.id,
+                              scholarship_id=req.scholarship_id,
+                              match_score=req.match_score)
+    db.add(saved)
+    db.commit()
+    return {"message": "Scholarship saved successfully"}
+
+
+@router.get("/saved")
+def get_saved(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    saved = db.query(SavedScholarship).filter(SavedScholarship.user_id == current_user.id).all()
+    result = []
+    for s in saved:
+        sch = db.query(Scholarship).filter(Scholarship.id == s.scholarship_id).first()
+        if sch:
+            result.append({"saved_id": s.id, "match_score": s.match_score, "status": s.status,
+                           "scholarship": {"id": sch.id, "name": sch.name, "provider": sch.provider,
+                                           "amount": sch.amount, "deadline": str(sch.deadline),
+                                           "official_link": sch.official_link}})
+    return result
+
+
+@router.get("/{scholarship_id}")
+def get_scholarship(scholarship_id: int, db: Session = Depends(get_db)):
+    s = db.query(Scholarship).filter(Scholarship.id == scholarship_id).first()
+    if not s:
+        raise Exception("Scholarship not found")
+    now = datetime.utcnow()
+    return ScholarshipOut(
+        id=s.id, name=s.name, provider=s.provider, amount=s.amount,
+        deadline=s.deadline, eligibility=s.eligibility, category=s.category,
+        state=s.state, field=s.field, official_link=s.official_link,
+        description=s.description, source=s.source,
+        days_left=(s.deadline - now).days if s.deadline else None
+    )
