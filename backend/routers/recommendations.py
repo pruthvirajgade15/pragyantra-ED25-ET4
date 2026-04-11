@@ -23,8 +23,21 @@ async def get_enhanced_ai_predictions(profile: StudentProfile, scholarships: lis
         for s in scholarships[:50]
     ])
 
-    prompt = f
-
+    prompt = f"""
+    Analyze these scholarships for a student profile:
+    {profile.__dict__}
+    
+    Scholarships:
+    {schol_list}
+    
+    Return a JSON object where keys are scholarship IDs (as strings), and values are objects with:
+    - match_score (float 0-100)
+    - win_probability (float 0-100)
+    - competition_level (string "Low", "Medium", "High")
+    - amount_rank (float 1-10)
+    
+    Output ONLY valid JSON without any markdown formatting.
+    """
     try:
         async with httpx.AsyncClient(timeout=45) as client:
             res = await client.post(

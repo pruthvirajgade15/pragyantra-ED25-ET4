@@ -130,7 +130,27 @@ def run_scraper():
                 logger.info(f"  ⏭️  Already exists: {schol_data['name']}")
 
         try:
-            live_scholarships = asyncio.run(scrape_buddy4study())
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                # Cannot use asyncio.run in a running loop, create a new event loop in a thread
+                import threading
+                live_scholarships = []
+                def run_in_thread():
+                    nonlocal live_scholarships
+                    new_loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(new_loop)
+                    live_scholarships = new_loop.run_until_complete(scrape_buddy4study())
+                    new_loop.close()
+                t = threading.Thread(target=run_in_thread)
+                t.start()
+                t.join()
+            else:
+                live_scholarships = asyncio.run(scrape_buddy4study())
+                
             for data in live_scholarships:
                 existing = db.query(Scholarship).filter(Scholarship.name == data["name"]).first()
                 if not existing:

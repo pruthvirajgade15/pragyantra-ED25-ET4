@@ -44,11 +44,11 @@ async def ask_chatbot(
     
     profile_context = ""
     if profile:
-        profile_context = f
+        profile_context = f"Student Profile:\nName: {current_user.name}\nState: {profile.state}\nField: {profile.field_of_study}\nGender: {profile.gender}\nDisability: {profile.disability}\nMinority: {profile.is_minority}\nIncome: {profile.annual_income}\nPercentage: {profile.percentage}"
     else:
         profile_context = f"Student Name: {current_user.name}\nProfile: Not yet completed"
 
-    sys_prompt = f
+    sys_prompt = f"You are a helpful AI Scholarship Assistant. The user's profile is:\n{profile_context}\n\nAnd some matching scholarships are:\n{schol_context}\n\nAnswer the user clearly."
 
     payload = {"contents": []}
     
@@ -61,7 +61,7 @@ async def ask_chatbot(
                 "parts": [{"text": content}]
             })
         
-    user_text = f
+    user_text = f"System: {sys_prompt}\nUser: {req.message}"
     
     payload["contents"].append({
         "role": "user",

@@ -45,14 +45,22 @@ async def generate_essay_with_gemini(
         "Write entirely in English. Use clear, professional, heartfelt language."
     )
 
-    profile_context = f if profile else ""
+    profile_context = f"{profile.__dict__}" if profile else ""
 
     extra_context = ""
     if personal_story: extra_context += f"\nPersonal Story/Background: {personal_story}"
     if goals:          extra_context += f"\nCareer Goals: {goals}"
     if achievements:   extra_context += f"\nAchievements: {achievements}"
 
-    prompt = f
+    prompt = f"""You are an expert scholarship essay writer.
+    Write an essay for the '{scholarship_name}' scholarship.
+    Approximate word count: {word_count}.
+    Student profile contexts: {profile_context}
+    Additional contexts: {extra_context}
+    
+    Instructions:
+    {lang_instruction}
+    """
 
     try:
         async with httpx.AsyncClient(timeout=60) as client:
@@ -74,9 +82,9 @@ async def generate_essay_with_gemini(
 def generate_fallback_essay(scholarship_name: str, language: str, word_count: int) -> str:
     
     if language == "hi":
-        return f
+        return f"यह {scholarship_name} के लिए एक निबंध है। (This is an AI generated fallback essay.)"
     else:
-        return f
+        return f"This is an essay for the {scholarship_name} scholarship. (This is an AI generated fallback essay.)"
 
 @router.post("/generate", response_model=EssayResponse)
 async def generate_essay(

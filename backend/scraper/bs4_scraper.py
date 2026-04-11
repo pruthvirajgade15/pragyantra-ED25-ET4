@@ -4,7 +4,15 @@ from datetime import datetime, timedelta
 
 def scrape_mahadbt():
 
-    html_content = 
+    html_content = """
+    <div class="scheme-card">
+        <h3 class="scheme-title">Sample Scheme</h3>
+        <span class="provider">Sample Provider</span>
+        <span class="amount">5000</span>
+        <span class="eligibility">Sample Eligibility</span>
+        <span class="deadline">2025-12-31</span>
+    </div>
+    """
     
     soup = BeautifulSoup(html_content, 'html.parser')
     scholarships = []

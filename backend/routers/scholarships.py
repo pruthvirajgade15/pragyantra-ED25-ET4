@@ -50,7 +50,12 @@ async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Schola
         for s in scholarships[:30]
     ])
 
-    prompt = f
+    prompt = f"""Review the following scholarships:
+    {schol_list}
+    For the student profile:
+    {profile.__dict__}
+    Return a JSON dictionary mapping scholarship ID (as string) to match score (float 0-100). Only return valid JSON without any markdown formatting.
+    """
 
     try:
         async with httpx.AsyncClient(timeout=30) as client:
