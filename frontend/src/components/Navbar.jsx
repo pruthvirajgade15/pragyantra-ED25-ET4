@@ -6,7 +6,6 @@ import { useAuth } from '../hooks/useAuth'
 import { useTranslation } from '../i18n/translations'
 import toast from 'react-hot-toast'
 
-// ✅ memo() stops Navbar re-rendering when parent re-renders
 const Navbar = memo(function Navbar() {
   const { user, logout, lang, switchLang } = useAuth()
   const { t } = useTranslation(lang)
@@ -38,7 +37,7 @@ const Navbar = memo(function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo */}
+          {}
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:shadow-sky-500/40 transition-shadow">
               <GraduationCap size={20} className="text-white" />
@@ -50,7 +49,7 @@ const Navbar = memo(function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Nav */}
+          {}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map(({ to, label }) => (
               <Link key={to} to={to}
@@ -60,7 +59,7 @@ const Navbar = memo(function Navbar() {
             ))}
           </div>
 
-          {/* Right side */}
+          {}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => switchLang(lang === 'en' ? 'hi' : 'en')}
@@ -92,14 +91,14 @@ const Navbar = memo(function Navbar() {
             )}
           </div>
 
-          {/* Mobile toggle */}
+          {}
           <button className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100"
             onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
-        {/* Mobile menu */}
+        {}
         {mobileOpen && (
           <div className="md:hidden pb-4 space-y-1">
             {navLinks.map(({ to, label }) => (

@@ -1,4 +1,4 @@
-"""Student Profile Router"""
+
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -10,12 +10,11 @@ from routers.auth import get_current_user
 
 router = APIRouter()
 
-
 class ProfileRequest(BaseModel):
     full_name:      str
     annual_income:  float
     percentage:     float
-    category:       str   # SC/ST/OBC/General/EWS/Minority
+    category:       str
     state:          str
     field_of_study: str
     gender:         str
@@ -26,7 +25,6 @@ class ProfileRequest(BaseModel):
     current_year:   int  = 1
     college:        str  = ""
     phone:          Optional[str] = ""
-
 
 @router.post("/")
 def upsert_profile(req: ProfileRequest, db: Session = Depends(get_db),
@@ -41,7 +39,6 @@ def upsert_profile(req: ProfileRequest, db: Session = Depends(get_db),
     db.commit()
     db.refresh(profile)
     return {"message": "Profile saved", "profile_id": profile.id}
-
 
 @router.get("/")
 def get_profile(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

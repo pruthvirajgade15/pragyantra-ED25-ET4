@@ -15,7 +15,6 @@ import './index.css'
 
 import Chatbot          from './components/Chatbot'
 
-// ✅ ProtectedRoute defined OUTSIDE App — never re-created on render
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
   if (loading) return (
@@ -33,7 +32,6 @@ function GlobalChatbot() {
   return <Chatbot />
 }
 
-// ✅ App just wires providers + router — no logic inside
 export default function App() {
   return (
     <BrowserRouter>

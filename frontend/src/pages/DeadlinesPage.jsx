@@ -48,7 +48,6 @@ export default function DeadlinesPage() {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true
   })
 
-  // Countdown circle
   const CountdownCircle = ({ days }) => {
     const maxDays = 30
     const pct = Math.max(0, Math.min(100, ((maxDays - days) / maxDays) * 100))
@@ -74,7 +73,7 @@ export default function DeadlinesPage() {
 
   return (
     <div className={`page-enter max-w-4xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
-      {/* Header */}
+      {}
       <div className="flex items-start gap-4 mb-8">
         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg flex-shrink-0">
           <Clock size={22} className="text-white" />
@@ -88,7 +87,7 @@ export default function DeadlinesPage() {
         </div>
       </div>
 
-      {/* Summary cards */}
+      {}
       {!loading && (
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
@@ -104,7 +103,7 @@ export default function DeadlinesPage() {
         </div>
       )}
 
-      {/* Filter tabs */}
+      {}
       <div className="flex gap-1 p-1 bg-slate-100 rounded-xl mb-6 w-fit flex-wrap">
         {[
           { key: 'all',      label: `All (${deadlines.length})` },
@@ -119,7 +118,7 @@ export default function DeadlinesPage() {
         ))}
       </div>
 
-      {/* Deadline list */}
+      {}
       {loading ? (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (

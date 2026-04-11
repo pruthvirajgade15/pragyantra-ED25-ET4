@@ -14,38 +14,16 @@ router = APIRouter()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 async def get_enhanced_ai_predictions(profile: StudentProfile, scholarships: list) -> dict:
-    """Uses Gemini to predict win probability and competition level along with match score"""
+    
     if not GEMINI_API_KEY:
         return {}
 
-    # Truncate lists to avoid hitting context limits or token limits for huge DBs (Hackathon purpose: top 15)
     schol_list = "\n".join([
         f"ID:{s.id} | Name: {s.name} | Category:{s.category} | State:{s.state} | Field:{s.field} | Amount:{s.amount}"
         for s in scholarships[:50]
     ])
 
-    prompt = f"""You are a scholarship prediction engine.
-    
-Student Profile:
-- Category: {profile.category}
-- Income: ₹{profile.annual_income}
-- Academic %: {profile.percentage}%
-- State: {profile.state}
-- Field: {profile.field_of_study}
-
-Scholarships:
-{schol_list}
-
-For each ID, provide an analysis in JSON format precisely like this:
-{{
-  "ID_NUMBER": {{
-    "match_score": 92.5,
-    "win_probability": 85.0,
-    "competition_level": "High" (or Medium, Low),
-    "amount_rank": 9.5 (scale of 1-10)
-  }}
-}}
-Make the analysis realistic based on Indian Scholarship trends. No explanations. Return strictly valid JSON."""
+    prompt = f
 
     try:
         async with httpx.AsyncClient(timeout=45) as client:
@@ -71,24 +49,22 @@ async def get_prioritized_recommendations(
     db: Session = Depends(get_db), 
     current_user: User = Depends(get_current_user)
 ):
-    """Returns AI-ranked scholarships prioritizing Win probability and amount"""
+    
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
     if not profile:
         raise HTTPException(status_code=400, detail="Profile not completed")
 
     scholarships = db.query(Scholarship).filter(Scholarship.is_active == True).all()
     
-    # Run through Rule Based first to filter
     filtered_scholarships = []
     for s in scholarships:
         base_score = rule_based_score(profile, s)
-        if base_score > 20: # Keep decently matching ones
+        if base_score > 20:
             filtered_scholarships.append((s, base_score))
             
     filtered_scholarships.sort(key=lambda x: x[1], reverse=True)
     top_candidates = [s[0] for s in filtered_scholarships[:50]]
     
-    # Try getting enhanced predictions from Gemini
     ai_predictions = await get_enhanced_ai_predictions(profile, top_candidates)
     
     now = datetime.utcnow()
@@ -97,14 +73,12 @@ async def get_prioritized_recommendations(
     for s in top_candidates:
         pred = ai_predictions.get(str(s.id), {})
         
-        # Fallback to intelligent heuristics if AI fails
         match_score = pred.get("match_score", rule_based_score(profile, s))
         win_probability = pred.get("win_probability", None)
         competition_level = pred.get("competition_level", "Medium")
         amount_rank = pred.get("amount_rank", 5.0)
         
         if not win_probability:
-            # Heuristic calculation for win probability
             win_probability = min(match_score * 0.9, 95.0)
             if "NSP" in s.provider or "National" in s.name:
                 competition_level = "High"

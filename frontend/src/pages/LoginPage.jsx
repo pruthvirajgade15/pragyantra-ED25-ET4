@@ -8,7 +8,7 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:7860/api'
 function AuthLayout({ children, side }) {
   return (
     <div className="min-h-screen flex">
-      {/* Left panel — decorative */}
+      {}
       <div className="hidden lg:flex lg:w-[45%] hero-bg relative items-center justify-center p-12">
         <div className="relative z-10 max-w-md text-white">
           <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-8">
@@ -39,7 +39,7 @@ function AuthLayout({ children, side }) {
         </div>
       </div>
 
-      {/* Right panel — form */}
+      {}
       <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-gradient-to-br from-slate-50 via-white to-sky-50/30">
         <div className="w-full max-w-[420px]">
           {children}
@@ -49,7 +49,6 @@ function AuthLayout({ children, side }) {
   )
 }
 
-// ── LOGIN ─────────────────────────────────────────────────────────────────────
 export function LoginPage() {
   const [showPw,  setShowPw]  = useState(false)
   const [loading, setLoading] = useState(false)
@@ -86,7 +85,7 @@ export function LoginPage() {
   return (
     <AuthLayout side="login">
       <div className="page-enter">
-        {/* Mobile logo */}
+        {}
         <div className="lg:hidden flex items-center gap-3 mb-8">
           <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg">
             <GraduationCap size={22} className="text-white" />
@@ -131,7 +130,6 @@ export function LoginPage() {
   )
 }
 
-// ── REGISTER ──────────────────────────────────────────────────────────────────
 export function RegisterPage() {
   const [showPw,   setShowPw]   = useState(false)
   const [loading,  setLoading]  = useState(false)
@@ -174,7 +172,7 @@ export function RegisterPage() {
   return (
     <AuthLayout side="register">
       <div className="page-enter">
-        {/* Mobile logo */}
+        {}
         <div className="lg:hidden flex items-center gap-3 mb-8">
           <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg">
             <GraduationCap size={22} className="text-white" />

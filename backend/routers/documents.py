@@ -14,8 +14,6 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# ── Endpoints ─────────────────────────────────────────────────────────────────
-
 @router.post("/upload")
 async def upload_document(
     doc_type: str = Form(...),
@@ -23,9 +21,7 @@ async def upload_document(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Uploads a document (PDF/Image), saves it, and extracts data via Gemini Vision"""
-    
-    # 1. Save file locally
+
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in [".jpg", ".jpeg", ".png", ".pdf"]:
         raise HTTPException(status_code=400, detail="Only JPG, PNG and PDF allowed")
@@ -37,7 +33,6 @@ async def upload_document(
     with open(file_path, "wb") as f:
         f.write(contents)
         
-    # 2. Try parsing with Gemini if API Key is present
     parsed_data_json = "{}"
     if GEMINI_API_KEY:
         try:
@@ -66,7 +61,6 @@ async def upload_document(
                     data = res.json()
                     raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
                     
-                    # Clean markdown if accidentally returned
                     if raw_text.startswith("```json"):
                         raw_text = raw_text[7:-3].strip()
                     elif raw_text.startswith("```"):
@@ -80,7 +74,6 @@ async def upload_document(
             print(f"Failed to parse document with AI: {e}")
             parsed_data_json = json.dumps({"error": "Failed to parse automatically"})
             
-    # 3. Store in DB
     new_doc = Document(
         user_id=current_user.id,
         doc_type=doc_type,
@@ -100,7 +93,7 @@ async def upload_document(
 
 @router.get("/")
 def get_documents(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """List user's uploaded documents securely"""
+    
     docs = db.query(Document).filter(Document.user_id == current_user.id).all()
     result = []
     for d in docs:
@@ -115,10 +108,9 @@ def get_documents(db: Session = Depends(get_db), current_user: User = Depends(ge
 
 @router.delete("/{doc_id}")
 def delete_document(doc_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """Delete a document record and file"""
+    
     doc = db.query(Document).filter(Document.id == doc_id, Document.user_id == current_user.id).first()
     if doc:
-        # Check if file exists, then delete it
         path = os.path.join(UPLOAD_DIR, doc.file_path)
         if os.path.exists(path):
             try:
@@ -131,7 +123,7 @@ def delete_document(doc_id: int, db: Session = Depends(get_db), current_user: Us
 
 @router.post("/auto-fill")
 def auto_fill_form(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """Aggregates all parsed document data to feed into an application form"""
+    
     docs = db.query(Document).filter(Document.user_id == current_user.id).all()
     aggregated_data = {}
     
@@ -139,7 +131,6 @@ def auto_fill_form(db: Session = Depends(get_db), current_user: User = Depends(g
         try:
             data = json.loads(doc.parsed_data)
             if isinstance(data, dict):
-                # Flatten or merge with prefix to avoid collisions
                 prefix = doc.doc_type + "_"
                 for k, v in data.items():
                     aggregated_data[prefix + k] = v

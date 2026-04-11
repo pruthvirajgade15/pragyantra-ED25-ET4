@@ -1,4 +1,4 @@
-"""Deadline Tracker Router"""
+
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -9,10 +9,9 @@ from routers.auth import get_current_user
 
 router = APIRouter()
 
-
 @router.get("/upcoming")
 def upcoming_deadlines(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """Get all upcoming deadlines sorted by urgency"""
+    
     saved = db.query(SavedScholarship).filter(SavedScholarship.user_id == current_user.id).all()
     saved_ids = [s.scholarship_id for s in saved]
 
@@ -35,7 +34,6 @@ def upcoming_deadlines(db: Session = Depends(get_db), current_user: User = Depen
             "official_link": s.official_link,
         })
     return result
-
 
 @router.get("/summary")
 def deadline_summary(db: Session = Depends(get_db)):

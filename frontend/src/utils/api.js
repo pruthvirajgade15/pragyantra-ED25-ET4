@@ -1,4 +1,4 @@
-// API utility — centralized axios instance
+
 import axios from 'axios'
 
 const BASE_URL = import.meta.env.VITE_API_URL || '/api'
@@ -8,14 +8,12 @@ const api = axios.create({
   timeout: 30000,
 })
 
-// Auto-attach JWT token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
-// Handle 401 globally
 api.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -28,7 +26,6 @@ api.interceptors.response.use(
   }
 )
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login:    (email, password) => api.post('/auth/login',
@@ -38,7 +35,6 @@ export const authAPI = {
   me: () => api.get('/auth/me'),
 }
 
-// ── Scholarships ──────────────────────────────────────────────────────────────
 export const scholarshipAPI = {
   list:    (params) => api.get('/scholarships', { params }),
   matched: ()       => api.get('/scholarships/matched'),
@@ -48,13 +44,11 @@ export const scholarshipAPI = {
   prioritize: ()    => api.get('/recommendations/prioritize'),
 }
 
-// ── Profile ───────────────────────────────────────────────────────────────────
 export const profileAPI = {
   get:  ()     => api.get('/profile'),
   save: (data) => api.post('/profile', data),
 }
 
-// ── Essays ────────────────────────────────────────────────────────────────────
 export const essayAPI = {
   generate: (data)     => api.post('/essays/generate', data),
   drafts:   ()         => api.get('/essays/drafts'),
@@ -62,13 +56,11 @@ export const essayAPI = {
   delete:   (id)       => api.delete(`/essays/drafts/${id}`),
 }
 
-// ── Deadlines ─────────────────────────────────────────────────────────────────
 export const deadlineAPI = {
   upcoming: () => api.get('/deadlines/upcoming'),
   summary:  () => api.get('/deadlines/summary'),
 }
 
-// ── Chatbot ───────────────────────────────────────────────────────────────────
 export const chatAPI = {
   ask: (message, history) => api.post('/chat/ask', { message, history }),
 }

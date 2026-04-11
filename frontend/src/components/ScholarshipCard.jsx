@@ -48,7 +48,7 @@ export default function ScholarshipCard({ scholarship, showMatchScore = false, o
 
   return (
     <div className={`glass-card feature-card p-5 flex flex-col gap-3 group ${getUrgencyClass()}`}>
-      {/* Header row */}
+      {}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <h3 className="font-display font-semibold text-slate-800 text-sm leading-snug line-clamp-2">{name}</h3>
@@ -66,10 +66,10 @@ export default function ScholarshipCard({ scholarship, showMatchScore = false, o
         </div>
       </div>
 
-      {/* Description */}
+      {}
       <p className="text-xs text-slate-500 line-clamp-2">{description}</p>
 
-      {/* Tags row */}
+      {}
       <div className="flex flex-wrap gap-1.5">
         <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 text-xs px-2.5 py-1 rounded-full font-medium">
           <IndianRupee size={11} />{amount}
@@ -89,7 +89,7 @@ export default function ScholarshipCard({ scholarship, showMatchScore = false, o
         </span>
       </div>
 
-      {/* Deadline row */}
+      {}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1.5 text-xs text-slate-500">
           <Calendar size={13} className={days_left != null && days_left <= 7 ? 'text-red-500' : 'text-slate-400'} />
@@ -105,7 +105,7 @@ export default function ScholarshipCard({ scholarship, showMatchScore = false, o
         )}
       </div>
 
-      {/* Action row */}
+      {}
       <div className="flex items-center gap-2 pt-1">
         <a href={official_link} target="_blank" rel="noopener noreferrer"
           className="flex-1 btn-primary text-xs py-2 text-center flex items-center justify-center gap-1.5">

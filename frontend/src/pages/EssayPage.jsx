@@ -73,7 +73,7 @@ export default function EssayPage() {
 
   return (
     <div className={`page-enter max-w-5xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
-      {/* Header */}
+      {}
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 bg-violet-50 border border-violet-100 rounded-full px-4 py-1.5 text-sm font-semibold text-violet-600 mb-3">
           <Sparkles size={14} /> AI-Powered
@@ -88,10 +88,10 @@ export default function EssayPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: Form */}
+        {}
         <div className="space-y-5">
           <div className="glass-card p-6 space-y-5">
-            {/* Scholarship Name */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">{t('scholarship_name')} *</label>
               <div className="relative group overflow-hidden rounded-xl bg-white focus-within:ring-2 focus-within:ring-sky-500/30">
@@ -117,7 +117,7 @@ export default function EssayPage() {
               </div>
             </div>
 
-            {/* Language + Word Count */}
+            {}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
@@ -139,7 +139,7 @@ export default function EssayPage() {
               </div>
             </div>
 
-            {/* Advanced toggle */}
+            {}
             <button type="button" onClick={() => setShowAdvanced(!showAdvanced)}
               className="flex items-center gap-2 text-sm text-sky-600 font-medium hover:text-sky-800 transition-colors">
               {showAdvanced ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
@@ -185,7 +185,7 @@ export default function EssayPage() {
             </button>
           </div>
 
-          {/* Drafts */}
+          {}
           <div className="glass-card p-5">
             <button type="button" onClick={() => setShowDrafts(!showDrafts)}
               className="flex items-center justify-between w-full">
@@ -214,7 +214,7 @@ export default function EssayPage() {
           </div>
         </div>
 
-        {/* Right: Essay output */}
+        {}
         <div className="glass-card p-6 flex flex-col min-h-[400px]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-display font-semibold text-slate-700">Generated Essay</h3>

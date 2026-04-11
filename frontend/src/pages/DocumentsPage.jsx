@@ -26,7 +26,7 @@ export default function DocumentsPage() {
     <div className="page-enter min-h-screen bg-gradient-to-b from-slate-50/50 to-white pb-20 pt-8 selection:bg-sky-200">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
-        {/* Header */}
+        {}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-xs tracking-wide uppercase font-display border border-emerald-200">
@@ -44,7 +44,7 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {/* Component */}
+        {}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <div className="relative">

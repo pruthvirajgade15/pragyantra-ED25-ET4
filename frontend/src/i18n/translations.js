@@ -1,7 +1,7 @@
-// Translations: English and Hindi
+
 export const translations = {
   en: {
-    // Nav
+
     home: "Home",
     scholarships: "Scholarships",
     dashboard: "Dashboard",
@@ -12,7 +12,6 @@ export const translations = {
     register: "Register",
     logout: "Logout",
 
-    // Hero
     hero_title: "Find Every Scholarship You Deserve",
     hero_subtitle: "AI-powered matching for Indian students. Auto-updated daily. 100% Free.",
     hero_cta: "Get Matched Now",
@@ -23,7 +22,6 @@ export const translations = {
     hero_stat3: "₹0",
     hero_stat3_label: "Cost to you, forever",
 
-    // Dashboard
     dashboard_title: "Your Scholarship Dashboard",
     matched_for_you: "Matched for You",
     match_score: "Match Score",
@@ -38,7 +36,6 @@ export const translations = {
     field: "Field",
     all_scholarships: "All Scholarships",
 
-    // Essay
     essay_title: "AI Essay Generator",
     essay_subtitle: "Generate a personalized scholarship essay in seconds",
     scholarship_name: "Scholarship Name",
@@ -52,7 +49,6 @@ export const translations = {
     copy_essay: "Copy Essay",
     my_drafts: "My Drafts",
 
-    // Profile
     profile_title: "Complete Your Profile",
     profile_subtitle: "We use this to match you with the best scholarships",
     full_name: "Full Name",
@@ -68,13 +64,11 @@ export const translations = {
     save_profile: "Save Profile",
     profile_saved: "Profile saved successfully!",
 
-    // Deadlines
     deadlines_title: "Scholarship Deadlines",
     critical: "⚠️ Closing Soon",
     urgent: "🔔 This Week",
     normal: "📅 Upcoming",
 
-    // Misc
     loading: "Loading...",
     no_results: "No scholarships found",
     search_placeholder: "Search scholarships...",
@@ -86,7 +80,7 @@ export const translations = {
   },
 
   hi: {
-    // Nav
+
     home: "होम",
     scholarships: "छात्रवृत्तियाँ",
     dashboard: "डैशबोर्ड",
@@ -97,7 +91,6 @@ export const translations = {
     register: "रजिस्टर",
     logout: "लॉगआउट",
 
-    // Hero
     hero_title: "अपनी हर छात्रवृत्ति खोजें",
     hero_subtitle: "भारतीय छात्रों के लिए AI आधारित मिलान। हर दिन अपडेट। पूरी तरह मुफ़्त।",
     hero_cta: "अभी मिलान करें",
@@ -108,7 +101,6 @@ export const translations = {
     hero_stat3: "₹0",
     hero_stat3_label: "आपके लिए कोई शुल्क नहीं",
 
-    // Dashboard
     dashboard_title: "आपका छात्रवृत्ति डैशबोर्ड",
     matched_for_you: "आपके लिए मिलान",
     match_score: "मिलान स्कोर",
@@ -123,7 +115,6 @@ export const translations = {
     field: "क्षेत्र",
     all_scholarships: "सभी छात्रवृत्तियाँ",
 
-    // Essay
     essay_title: "AI निबंध जनरेटर",
     essay_subtitle: "सेकंडों में व्यक्तिगत छात्रवृत्ति निबंध बनाएं",
     scholarship_name: "छात्रवृत्ति का नाम",
@@ -137,7 +128,6 @@ export const translations = {
     copy_essay: "निबंध कॉपी करें",
     my_drafts: "मेरे ड्राफ़्ट",
 
-    // Profile
     profile_title: "अपनी प्रोफ़ाइल पूरी करें",
     profile_subtitle: "हम इसका उपयोग आपको सर्वोत्तम छात्रवृत्तियों से मिलाने के लिए करते हैं",
     full_name: "पूरा नाम",
@@ -153,13 +143,11 @@ export const translations = {
     save_profile: "प्रोफ़ाइल सहेजें",
     profile_saved: "प्रोफ़ाइल सफलतापूर्वक सहेजी गई!",
 
-    // Deadlines
     deadlines_title: "छात्रवृत्ति की अंतिम तिथियाँ",
     critical: "⚠️ जल्द समाप्त",
     urgent: "🔔 इस सप्ताह",
     normal: "📅 आगामी",
 
-    // Misc
     loading: "लोड हो रहा है...",
     no_results: "कोई छात्रवृत्ति नहीं मिली",
     search_placeholder: "छात्रवृत्तियाँ खोजें...",

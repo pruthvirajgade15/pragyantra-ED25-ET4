@@ -75,7 +75,7 @@ export default function ProfilePage() {
 
   return (
     <div className={`page-enter max-w-3xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
-      {/* Header */}
+      {}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center">
           <User size={20} className="text-white" />
@@ -86,7 +86,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Why this matters */}
+      {}
       <div className="glass-card p-4 mb-6 bg-sky-50 border border-sky-100">
         <p className="text-sm text-sky-700 flex items-start gap-2">
           <CheckCircle size={16} className="flex-shrink-0 mt-0.5" />
@@ -95,7 +95,7 @@ export default function ProfilePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Personal Info */}
+        {}
         <div className="glass-card p-6">
           <h2 className="font-display font-semibold text-slate-800 mb-5 pb-3 border-b border-slate-100">
             👤 Personal Information
@@ -111,7 +111,7 @@ export default function ProfilePage() {
                 <option>Male</option><option>Female</option><option>Other</option>
               </select>
             </div>
-            {/* Advanced DOB Field */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5 align-middle">
                 Date of Birth
@@ -166,7 +166,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Academic Info */}
+        {}
         <div className="glass-card p-6">
           <h2 className="font-display font-semibold text-slate-800 mb-5 pb-3 border-b border-slate-100">
             🎓 Academic Information
@@ -197,7 +197,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Financial & Social */}
+        {}
         <div className="glass-card p-6">
           <h2 className="font-display font-semibold text-slate-800 mb-5 pb-3 border-b border-slate-100">
             💰 Financial & Social Background
@@ -212,7 +212,7 @@ export default function ProfilePage() {
                   <input type="number" name="annual_income" value={form.annual_income} onChange={handleChange}
                     className="w-full px-4 py-3 bg-transparent text-slate-700 outline-none font-medium placeholder:text-slate-400" placeholder="150000" required />
                 </div>
-                {/* Dynamic Fast-Add Pills */}
+                {}
                 <div className="flex flex-wrap gap-2">
                   {[100000, 250000, 500000, 800000].map(amount => (
                     <button key={amount} type="button"
@@ -240,9 +240,9 @@ export default function ProfilePage() {
               </select>
             </div>
 
-            {/* Dynamic Status Toggles */}
+            {}
             <div className="col-span-1 sm:col-span-2 space-y-4">
-              {/* Disability Area */}
+              {}
               <div className="p-4 rounded-xl border border-slate-200 bg-white hover:border-sky-300 transition-colors shadow-sm">
                 <div className="flex items-center justify-between mb-1">
                   <div>
@@ -265,7 +265,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              {/* Minority Area */}
+              {}
               <div className="p-4 rounded-xl border border-slate-200 bg-white hover:border-sky-300 transition-colors shadow-sm">
                 <div className="flex items-center justify-between mb-1">
                   <div>
@@ -291,7 +291,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Submit */}
+        {}
         <button type="submit" disabled={loading || saved}
           className={`group w-full py-4 rounded-2xl font-display font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 transform ${saved
               ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white shadow-lg shadow-green-500/40 scale-100'

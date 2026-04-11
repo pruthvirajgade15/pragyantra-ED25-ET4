@@ -32,7 +32,7 @@ export default function HomePage() {
   return (
     <div className={`page-enter ${lang === 'hi' ? 'font-hindi' : ''}`}>
 
-      {/* ── Hero ── */}
+      {}
       <section className="hero-bg text-white py-24 sm:py-28 px-4">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 hover:bg-white/15 transition-colors cursor-default">
@@ -57,7 +57,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Stats */}
+          {}
           <div className="grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
             {[
               { val: t('hero_stat1'), label: t('hero_stat1_label') },
@@ -73,7 +73,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Meet Priya ── */}
+      {}
       <section className="py-16 px-4 bg-gradient-to-b from-sky-50/80 to-white relative section-dot-grid">
         <div className="max-w-3xl mx-auto relative z-10">
           <div className="glass-card p-10 text-center">
@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features ── */}
+      {}
       <section className="py-20 px-4 bg-white relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
@@ -117,7 +117,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── How it Works ── */}
+      {}
       <section className="py-20 px-4 bg-gradient-to-b from-slate-50 to-white relative section-dot-grid">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
@@ -145,7 +145,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Testimonials ── */}
+      {}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
@@ -176,7 +176,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Impact ── */}
+      {}
       <section className="py-20 px-4 bg-gradient-to-b from-white to-slate-50">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-800 mb-12">
@@ -200,7 +200,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {}
       <section className="hero-bg py-24 px-4 text-white text-center">
         <div className="max-w-2xl mx-auto relative z-10">
           <GraduationCap size={56} className="mx-auto mb-5 text-sky-300 opacity-80" />
@@ -215,7 +215,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {}
       <footer className="bg-slate-900 text-slate-400 text-sm text-center py-8 px-4">
         <p>Built with ❤️ by <span className="text-sky-400 font-semibold">Team Catalyst</span> — Modern College of Engineering, Pune</p>
         <p className="mt-1.5 text-slate-500">PRAGYANTRA Hackathon 2025 • Powered by Gemini AI (Google)</p>

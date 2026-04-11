@@ -14,7 +14,6 @@ load_dotenv()
 router = APIRouter()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Models to try in order (fallback chain — put working model first)
 GEMINI_MODELS = [
     "gemini-2.5-flash",
     "gemini-2.0-flash-lite",
@@ -34,13 +33,10 @@ async def ask_chatbot(
     if not GEMINI_API_KEY:
         raise HTTPException(status_code=500, detail="Gemini API Key missing")
         
-    # Get user profile
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
     
-    # Get scholarships
     scholarships = db.query(Scholarship).filter(Scholarship.is_active == True).all()
     
-    # Format DB context
     schol_context = "\n".join([
         f"- {s.name}: {s.amount}, Deadline: {s.deadline.strftime('%d %b %Y') if s.deadline else 'Open'}, Category: {s.category}, Field: {s.field}, Provider: {s.provider}"
         for s in scholarships[:30]
@@ -48,33 +44,14 @@ async def ask_chatbot(
     
     profile_context = ""
     if profile:
-        profile_context = f"""Student Name: {current_user.name}
-Category: {profile.category}
-Field of Study: {profile.field_of_study}
-State: {profile.state}
-Annual Income: {profile.annual_income}
-Academic Percentage: {profile.percentage}%"""
+        profile_context = f
     else:
         profile_context = f"Student Name: {current_user.name}\nProfile: Not yet completed"
 
-    sys_prompt = f"""You are ScholarshipHunter AI Assistant. Help {current_user.name} with scholarship queries.
-Be concise, friendly, and helpful. Use bold (**text**) for key terms.
+    sys_prompt = f
 
-Student Profile:
-{profile_context}
-
-Available Scholarships in Database:
-{schol_context}
-
-Rules:
-- Only recommend scholarships listed above
-- Evaluate eligibility based on the student profile
-- Keep answers brief and actionable"""
-
-    # Build payload
     payload = {"contents": []}
     
-    # Attach conversation history (skip any empty messages)
     for msg in req.history:
         role = "user" if msg.get("role") == "user" else "model"
         content = msg.get("content", "").strip()
@@ -84,25 +61,18 @@ Rules:
                 "parts": [{"text": content}]
             })
         
-    # Attach current message with context
-    user_text = f"""[CONTEXT]
-{sys_prompt}
-
-[USER MESSAGE]
-{req.message}"""
+    user_text = f
     
     payload["contents"].append({
         "role": "user",
         "parts": [{"text": user_text}]
     })
 
-    # Try each model in the fallback chain, with retry on rate limit
     last_error = None
     async with httpx.AsyncClient(timeout=60) as client:
         for model_name in GEMINI_MODELS:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={GEMINI_API_KEY}"
             
-            # Try up to 2 times per model (retry once after delay)
             for attempt in range(2):
                 try:
                     res = await client.post(
@@ -118,26 +88,24 @@ Rules:
                             return {"reply": reply}
                         except (KeyError, IndexError):
                             last_error = "Empty response from AI"
-                            break  # Move to next model
+                            break
                     elif res.status_code == 429:
                         if attempt == 0:
-                            # Wait and retry this same model once
                             print(f"Rate limited on {model_name}, waiting 5s to retry...")
                             await asyncio.sleep(5)
                             continue
                         else:
                             print(f"Still rate limited on {model_name}, trying next model...")
                             last_error = "Rate limited"
-                            break  # Move to next model
+                            break
                     else:
                         print(f"Error on {model_name}: {res.status_code} - {res.text[:200]}")
                         last_error = f"API error {res.status_code}"
-                        break  # Move to next model
+                        break
                         
                 except Exception as e:
                     print(f"Exception on {model_name}: {e}")
                     last_error = str(e)
-                    break  # Move to next model
+                    break
     
-    # All models failed — return a helpful message instead of crashing
     return {"reply": f"I'm temporarily unable to connect to the AI service. Your API quota may have been exceeded. Please wait about 30 seconds and try again."}

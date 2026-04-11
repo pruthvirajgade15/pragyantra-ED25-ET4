@@ -5,7 +5,7 @@ const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(() => {
-    // Read from localStorage once on init — not on every render
+
     try {
       const stored = localStorage.getItem('user')
       return stored ? JSON.parse(stored) : null
@@ -47,7 +47,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem('lang', l)
   }, [])
 
-  // Memoize context value so it doesn't change on every render
   const value = useMemo(() => ({
     user, loading, lang, login, register, logout, switchLang
   }), [user, loading, lang, login, register, logout, switchLang])

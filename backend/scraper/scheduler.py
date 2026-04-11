@@ -1,8 +1,4 @@
-"""
-ScholarshipHunter Auto-Scraper
-Scrapes NSP, Buddy4Study, AICTE, Vidyasaarathi daily
-Uses APScheduler — runs automatically at 11:30 PM IST
-"""
+
 
 import httpx
 import asyncio
@@ -15,9 +11,6 @@ import re
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("scraper")
-
-
-# ── Source Configs ────────────────────────────────────────────────────────────
 
 SCRAPE_SOURCES = [
     {
@@ -32,7 +25,6 @@ SCRAPE_SOURCES = [
     },
 ]
 
-# Scholarships to add via known data (more reliable than live scraping in sandbox)
 KNOWN_NEW_SCHOLARSHIPS = [
     {
         "name": "Google Generation Scholarship India 2025",
@@ -114,11 +106,8 @@ KNOWN_NEW_SCHOLARSHIPS = [
     },
 ]
 
-
-# ── Main Scrape Function ──────────────────────────────────────────────────────
-
 def run_scraper():
-    """Main scraper — adds new scholarships to DB"""
+    
     logger.info("🕷️  Starting scholarship scraper...")
 
     try:
@@ -140,7 +129,6 @@ def run_scraper():
             else:
                 logger.info(f"  ⏭️  Already exists: {schol_data['name']}")
 
-        # Try live scraping (best-effort, won't crash if fails)
         try:
             live_scholarships = asyncio.run(scrape_buddy4study())
             for data in live_scholarships:
@@ -158,9 +146,8 @@ def run_scraper():
     except Exception as e:
         logger.error(f"❌ Scraper failed: {e}")
 
-
 async def scrape_buddy4study() -> list:
-    """Attempt to scrape Buddy4Study scholarships"""
+    
     results = []
     try:
         async with httpx.AsyncClient(timeout=15, headers={
@@ -192,19 +179,15 @@ async def scrape_buddy4study() -> list:
         logger.warning(f"Buddy4Study scrape failed: {e}")
     return results
 
-
-# ── Scheduler ─────────────────────────────────────────────────────────────────
-
 def start_scheduler():
     scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
     scheduler.add_job(
         run_scraper,
-        CronTrigger(hour=23, minute=30),   # 11:30 PM IST daily
+        CronTrigger(hour=23, minute=30),
         id="daily_scraper",
         replace_existing=True,
     )
     scheduler.start()
     logger.info("⏰ Scraper scheduled: daily at 11:30 PM IST")
 
-    # Also run once on startup to populate fresh data
     run_scraper()

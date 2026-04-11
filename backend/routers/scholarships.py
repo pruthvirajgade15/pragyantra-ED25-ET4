@@ -1,4 +1,4 @@
-"""Scholarships router — list, search, AI matching, save"""
+
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -14,9 +14,6 @@ from routers.auth import get_current_user
 router = APIRouter()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
 
 class ScholarshipOut(BaseModel):
     id:           int
@@ -37,16 +34,12 @@ class ScholarshipOut(BaseModel):
     class Config:
         from_attributes = True
 
-
 class SaveRequest(BaseModel):
     scholarship_id: int
     match_score:    float = 0.0
 
-
-# ── AI Matching ───────────────────────────────────────────────────────────────
-
 async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Scholarship]) -> dict:
-    """Use Gemini AI to score scholarship matches 0-100"""
+    
     if not GEMINI_API_KEY:
         return {}
 
@@ -57,25 +50,7 @@ async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Schola
         for s in scholarships[:30]
     ])
 
-    prompt = f"""You are a scholarship eligibility expert for Indian students.
-
-Student Profile:
-- Category: {profile.category}
-- Annual Income: ₹{profile.annual_income}
-- Academic %: {profile.percentage}%
-- State: {profile.state}
-- Field of Study: {profile.field_of_study}
-- Gender: {profile.gender}
-- Disability: {profile.disability}
-- Is Minority: {profile.is_minority}
-- Current Year: {profile.current_year}
-
-Scholarships to evaluate:
-{schol_list}
-
-Return ONLY a JSON object like: {{"scholarship_id": score, ...}}
-Score 0-100 based on eligibility match. 100 = perfect match, 0 = ineligible.
-Consider all criteria strictly. No explanation, just JSON."""
+    prompt = f
 
     try:
         async with httpx.AsyncClient(timeout=30) as client:
@@ -98,52 +73,41 @@ Consider all criteria strictly. No explanation, just JSON."""
         print(f"AI matching error: {e}")
     return {}
 
-
 def rule_based_score(profile: StudentProfile, s: Scholarship) -> float:
-    """Fast rule-based fallback scoring"""
+    
     score = 50.0
 
-    # Category match
     if s.category not in ["All", "all"] and s.category != profile.category:
         return 0.0
     elif s.category == profile.category:
         score += 25
 
-    # Income check
     if s.income_limit and profile.annual_income and profile.annual_income > s.income_limit:
         return 0.0
     elif s.income_limit and profile.annual_income:
         score += 15
 
-    # Percentage check
     if s.min_percentage and profile.percentage and profile.percentage < s.min_percentage:
         return 0.0
     elif s.min_percentage and profile.percentage:
         score += 10
 
-    # State match
     if s.state not in ["All India", "All", "all"]:
         if profile.state and profile.state.lower() in s.state.lower():
             score += 10
 
-    # Field match
     if s.field not in ["All", "all"]:
         if profile.field_of_study and profile.field_of_study.lower() in s.field.lower():
             score += 10
 
-    # Gender match
     if s.gender and s.gender not in ["All", "all"]:
         if profile.gender and s.gender.lower() != profile.gender.lower():
             return 0.0
 
-    # Disability
     if s.disability_required and not profile.disability:
         return 0.0
 
     return min(score, 100.0)
-
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.get("/", response_model=List[ScholarshipOut])
 async def list_scholarships(
@@ -173,20 +137,18 @@ async def list_scholarships(
         ))
     return result
 
-
 @router.get("/matched", response_model=List[ScholarshipOut])
 async def matched_scholarships(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """AI-powered scholarship matching based on student profile"""
+    
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
     if not profile:
         raise Exception("Profile not found. Please complete your profile first.")
 
     scholarships = db.query(Scholarship).filter(Scholarship.is_active == True).all()
 
-    # Try AI scoring, fall back to rule-based
     ai_scores = await get_ai_match_scores(profile, scholarships)
     now = datetime.utcnow()
 
@@ -208,7 +170,6 @@ async def matched_scholarships(
     result.sort(key=lambda x: x.match_score or 0, reverse=True)
     return result[:20]
 
-
 @router.post("/save")
 def save_scholarship(req: SaveRequest, db: Session = Depends(get_db),
                      current_user: User = Depends(get_current_user)):
@@ -225,7 +186,6 @@ def save_scholarship(req: SaveRequest, db: Session = Depends(get_db),
     db.commit()
     return {"message": "Scholarship saved successfully"}
 
-
 @router.get("/saved")
 def get_saved(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     saved = db.query(SavedScholarship).filter(SavedScholarship.user_id == current_user.id).all()
@@ -238,7 +198,6 @@ def get_saved(db: Session = Depends(get_db), current_user: User = Depends(get_cu
                                            "amount": sch.amount, "deadline": str(sch.deadline),
                                            "official_link": sch.official_link}})
     return result
-
 
 @router.get("/{scholarship_id}")
 def get_scholarship(scholarship_id: int, db: Session = Depends(get_db)):

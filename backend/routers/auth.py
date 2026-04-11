@@ -1,4 +1,4 @@
-"""Auth router — register, login, JWT tokens"""
+
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -15,12 +15,9 @@ router = APIRouter()
 
 SECRET_KEY  = os.getenv("SECRET_KEY", "scholarship2025secret")
 ALGORITHM   = "HS256"
-EXPIRE_MINS = 60 * 24 * 7  # 7 days
+EXPIRE_MINS = 60 * 24 * 7
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
-
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
 
 class RegisterRequest(BaseModel):
     name:     str
@@ -35,19 +32,15 @@ class TokenResponse(BaseModel):
     name:         str
     language:     str
 
-
-# ── Password helpers — using bcrypt directly, no passlib ─────────────────────
-
 def hash_password(pw: str) -> str:
-    """Hash password using bcrypt directly"""
+    
     pw_bytes = pw[:72].encode("utf-8")          # bcrypt max = 72 bytes
     salt     = bcrypt.gensalt(rounds=12)
     hashed   = bcrypt.hashpw(pw_bytes, salt)
     return hashed.decode("utf-8")
 
-
 def verify_password(pw: str, hashed: str) -> bool:
-    """Verify password using bcrypt directly"""
+    
     try:
         pw_bytes     = pw[:72].encode("utf-8")
         hashed_bytes = hashed.encode("utf-8")
@@ -55,14 +48,10 @@ def verify_password(pw: str, hashed: str) -> bool:
     except Exception:
         return False
 
-
-# ── JWT helpers ───────────────────────────────────────────────────────────────
-
 def create_token(data: dict) -> str:
     to_encode      = data.copy()
     to_encode["exp"] = datetime.utcnow() + timedelta(minutes=EXPIRE_MINS)
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 
 def get_current_user(token: str = Depends(oauth2), db: Session = Depends(get_db)):
     try:
@@ -77,16 +66,11 @@ def get_current_user(token: str = Depends(oauth2), db: Session = Depends(get_db)
         raise HTTPException(status_code=401, detail="User not found")
     return user
 
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
-
 @router.post("/register", response_model=TokenResponse)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
-    # Check duplicate email
     if db.query(User).filter(User.email == req.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    # Validate password length
     if len(req.password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
     if len(req.password) > 72:
@@ -110,7 +94,6 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         language=user.language
     )
 
-
 @router.post("/login", response_model=TokenResponse)
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == form.username).first()
@@ -125,7 +108,6 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         name=user.name,
         language=user.language
     )
-
 
 @router.get("/me")
 def me(current_user: User = Depends(get_current_user)):

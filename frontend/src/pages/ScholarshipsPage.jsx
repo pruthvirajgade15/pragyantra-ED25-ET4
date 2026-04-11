@@ -61,7 +61,7 @@ export default function ScholarshipsPage() {
 
   return (
     <div className={`page-enter max-w-7xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
-      {/* Header */}
+      {}
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-100 rounded-full px-4 py-1.5 text-sm font-semibold text-sky-600 mb-3">
           <Search size={14} /> Browse & Filter
@@ -72,7 +72,7 @@ export default function ScholarshipsPage() {
         </p>
       </div>
 
-      {/* Search bar */}
+      {}
       <div className="flex gap-3 mb-4">
         <div className="flex-1 relative">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -97,7 +97,7 @@ export default function ScholarshipsPage() {
         )}
       </div>
 
-      {/* Filters panel */}
+      {}
       {showFilters && (
         <div className="glass-card p-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 animate-slide-up">
           <div>
@@ -121,7 +121,7 @@ export default function ScholarshipsPage() {
         </div>
       )}
 
-      {/* Results */}
+      {}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(9)].map((_, i) => <SkeletonCard key={i} />)}

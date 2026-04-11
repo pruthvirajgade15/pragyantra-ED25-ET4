@@ -14,12 +14,11 @@ export default function DocumentVault({ documents, fetchDocuments }) {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
       setFile(selectedFile)
-      
-      // Attempt to show preview if it's an image
+
       if (selectedFile.type.startsWith('image/')) {
         setFilePreview(URL.createObjectURL(selectedFile))
       } else {
-        setFilePreview(null) // Not an image, no preview
+        setFilePreview(null)
       }
     }
   }
@@ -45,7 +44,7 @@ export default function DocumentVault({ documents, fetchDocuments }) {
       
       setFile(null)
       setFilePreview(null)
-      // reset file input
+
       const fileInput = document.getElementById('file-upload');
       if (fileInput) fileInput.value = '';
       
@@ -70,7 +69,7 @@ export default function DocumentVault({ documents, fetchDocuments }) {
 
   return (
     <div className="space-y-6">
-      {/* Upload Zone */}
+      {}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
         <h2 className="text-lg font-bold text-slate-800 mb-4">Upload New Document</h2>
         <form onSubmit={handleUpload} className="grid sm:grid-cols-[1fr_2fr_auto] gap-4 items-end">
@@ -115,7 +114,7 @@ export default function DocumentVault({ documents, fetchDocuments }) {
                 </label>
               </div>
               
-              {/* Image Preview Thumbnail beside the input */}
+              {}
               {filePreview && (
                 <div className="w-11 h-11 rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 shadow-sm bg-slate-100">
                   <img src={filePreview} alt="Preview" className="w-full h-full object-cover" />
@@ -134,7 +133,7 @@ export default function DocumentVault({ documents, fetchDocuments }) {
         </form>
       </div>
 
-      {/* Document List */}
+      {}
       <div className="grid md:grid-cols-2 gap-4">
         {documents.length === 0 && (
           <div className="md:col-span-2 text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">

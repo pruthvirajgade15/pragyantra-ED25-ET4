@@ -2,9 +2,7 @@ import requests
 from datetime import datetime
 
 def fetch_nsp_scholarships():
-    """Simulates fetching from National Scholarship Portal (NSP) API"""
-    # Real Gov APIs require tokens/whitelisting. We mock the JSON structure.
-    
+
     mock_api_response = {
         "status": "success",
         "data": [

@@ -26,13 +26,11 @@ body {
   font-family: 'Noto Sans Devanagari', sans-serif;
 }
 
-/* ── Premium Scrollbar ─────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0ea5e9, #0369a1); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #0369a1; }
 
-/* ── Glassmorphism Card ────────────────────────────────────────────────────── */
 .glass-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
@@ -49,7 +47,6 @@ body {
   border-color: rgba(14, 165, 233, 0.2);
 }
 
-/* ── Gradient Text ─────────────────────────────────────────────────────────── */
 .gradient-text {
   background: var(--brand-gradient);
   -webkit-background-clip: text;
@@ -64,7 +61,6 @@ body {
   background-clip: text;
 }
 
-/* ── Match Score Badges ────────────────────────────────────────────────────── */
 .match-badge {
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: white;
@@ -86,12 +82,10 @@ body {
   box-shadow: 0 2px 8px rgba(148, 163, 184, 0.3);
 }
 
-/* ── Urgency ───────────────────────────────────────────────────────────────── */
 .urgency-critical { background: #fef2f2; border-left: 4px solid #ef4444; }
 .urgency-urgent   { background: #fff7ed; border-left: 4px solid #f97316; }
 .urgency-normal   { background: #f0fdf4; border-left: 4px solid #22c55e; }
 
-/* ── Premium Buttons ───────────────────────────────────────────────────────── */
 .btn-primary {
   @apply bg-gradient-to-r from-sky-500 to-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-300 shadow-md active:scale-95;
   box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
@@ -117,7 +111,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* ── Input ─────────────────────────────────────────────────────────────────── */
 .input-field {
   @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent text-slate-800 placeholder-slate-400 transition-all duration-300;
   backdrop-filter: blur(8px);
@@ -126,7 +119,6 @@ body {
   box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1), var(--card-shadow);
 }
 
-/* ── Skeleton Loading ──────────────────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -139,7 +131,6 @@ body {
   border-radius: 10px;
 }
 
-/* ── Page Transitions ──────────────────────────────────────────────────────── */
 .page-enter { animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
 @keyframes pageSlideIn {
@@ -147,7 +138,6 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Staggered Card Animations ─────────────────────────────────────────────── */
 @keyframes cardFadeIn {
   from { opacity: 0; transform: translateY(24px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -161,7 +151,6 @@ body {
 .glass-card:nth-child(5) { animation-delay: 0.25s; }
 .glass-card:nth-child(6) { animation-delay: 0.3s; }
 
-/* ── Navbar ────────────────────────────────────────────────────────────────── */
 .navbar {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px) saturate(180%);
@@ -170,7 +159,6 @@ body {
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
 }
 
-/* ── Hero Section ──────────────────────────────────────────────────────────── */
 .hero-bg {
   background: linear-gradient(135deg, #0c4a6e 0%, #075985 25%, #0369a1 50%, #0284c7 75%, #0ea5e9 100%);
   position: relative;
@@ -207,7 +195,6 @@ body {
   100% { transform: translate(2%, 2%) rotate(1deg) scale(1); }
 }
 
-/* ── Floating Particles (background decoration) ────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   33%      { transform: translateY(-12px) rotate(3deg); }
@@ -219,7 +206,6 @@ body {
   50%      { opacity: 1; box-shadow: 0 0 24px rgba(14, 165, 233, 0.4); }
 }
 
-/* ── Stats Card ────────────────────────────────────────────────────────────── */
 .stat-card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
@@ -237,13 +223,11 @@ body {
   transform: translateY(-2px);
 }
 
-/* ── Section Decorations ───────────────────────────────────────────────────── */
 .section-dot-grid {
   background-image: radial-gradient(rgba(14, 165, 233, 0.07) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
-/* ── Premium Feature Card Hover ────────────────────────────────────────────── */
 .feature-card {
   position: relative;
   overflow: hidden;
@@ -266,7 +250,6 @@ body {
   transform: scaleX(1);
 }
 
-/* ── Smooth Slide Up ───────────────────────────────────────────────────────── */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -274,18 +257,15 @@ body {
 
 .animate-slide-up { animation: slideUp 0.3s ease-out; }
 
-/* ── Tooltip pulse ─────────────────────────────────────────────────────────── */
 @keyframes gentlePulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.05); }
 }
 
-/* ── Focus ring utilities ──────────────────────────────────────────────────── */
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2;
 }
 
-/* ── Gradient Borders ──────────────────────────────────────────────────────── */
 .gradient-border {
   position: relative;
   border-radius: 20px;
@@ -306,7 +286,6 @@ body {
   opacity: 1;
 }
 
-/* ── Spin animation (for loaders) ──────────────────────────────────────────── */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }

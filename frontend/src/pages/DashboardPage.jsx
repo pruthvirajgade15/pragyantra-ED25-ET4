@@ -76,7 +76,7 @@ export default function DashboardPage() {
   return (
     <div className={`page-enter max-w-7xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
 
-      {/* Header */}
+      {}
       <div className="mb-10">
         <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-100 rounded-full px-4 py-1.5 text-sm font-semibold text-sky-600 mb-3">
           <Sparkles size={14} /> AI Dashboard
@@ -87,7 +87,7 @@ export default function DashboardPage() {
         <p className="text-slate-500 mt-1.5">Welcome back, <span className="font-semibold text-sky-600">{user?.name}</span>. Here's your scholarship overview.</p>
       </div>
 
-      {/* Stats row */}
+      {}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard icon={Sparkles}    value={matched.length}          label="AI Matches"        color="sky" />
         <StatCard icon={BookmarkIcon} value={saved.length}           label="Saved"             color="purple" />
@@ -96,7 +96,7 @@ export default function DashboardPage() {
                   label="Top match score" color="green" />
       </div>
 
-      {/* Critical deadline alert */}
+      {}
       {criticalDeadlines.length > 0 && (
         <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
           <AlertCircle size={20} className="text-amber-500 flex-shrink-0 mt-0.5" />
@@ -114,7 +114,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Profile prompt */}
+      {}
       {!hasProfile && (
         <div className="mb-6 glass-card p-6 text-center border-dashed border-2 border-sky-200">
           <Sparkles size={36} className="text-sky-400 mx-auto mb-3" />
@@ -123,7 +123,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Tabs */}
+      {}
       <div className="flex gap-1 p-1 bg-slate-100 rounded-xl mb-6 w-fit">
         {[
           { key: 'matched', label: `🎯 ${t('matched_for_you')} (${matched.length})` },
@@ -136,7 +136,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Content */}
+      {}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
@@ -177,7 +177,7 @@ export default function DashboardPage() {
         )
       )}
 
-      {/* Quick links */}
+      {}
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link to="/essay" className="glass-card p-5 flex items-center gap-4 hover:border-sky-200 transition-all">
           <div className="w-11 h-11 rounded-xl bg-sky-100 flex items-center justify-center">
