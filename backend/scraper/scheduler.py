@@ -1,5 +1,3 @@
-
-
 import httpx
 import asyncio
 from bs4 import BeautifulSoup
@@ -30,7 +28,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
         "name": "Google Generation Scholarship India 2025",
         "provider": "Google",
         "amount": "₹75,000 + mentorship",
-        "deadline": datetime(2025, 8, 15),
+        "deadline": datetime(2026, 8, 15),
         "eligibility": "Women/underrepresented groups in CS/IT, 3rd year+, CGPA 3.0+",
         "category": "All",
         "state": "All India",
@@ -46,7 +44,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
         "name": "Microsoft TEALS Scholarship India",
         "provider": "Microsoft",
         "amount": "₹1,00,000",
-        "deadline": datetime(2025, 9, 30),
+        "deadline": datetime(2026, 9, 30),
         "eligibility": "CS/IT students, financial need, 60%+",
         "category": "All",
         "state": "All India",
@@ -61,7 +59,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
         "name": "Flipkart Scholarship for Girls in Tech",
         "provider": "Flipkart",
         "amount": "₹80,000/year",
-        "deadline": datetime(2025, 10, 15),
+        "deadline": datetime(2026, 10, 15),
         "eligibility": "Girls pursuing B.Tech/BE in tier 2/3 colleges",
         "category": "All",
         "state": "All India",
@@ -77,7 +75,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
         "name": "LIC Golden Jubilee Scholarship",
         "provider": "LIC of India",
         "amount": "₹20,000/year",
-        "deadline": datetime(2025, 8, 31),
+        "deadline": datetime(2026, 8, 31),
         "eligibility": "Students from low-income families, 60%+ in 12th, income < 2 LPA",
         "category": "All",
         "state": "All India",
@@ -92,7 +90,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
         "name": "Kotak Kanya Scholarship",
         "provider": "Kotak Education Foundation",
         "amount": "₹1,50,000/year",
-        "deadline": datetime(2025, 8, 20),
+        "deadline": datetime(2026, 8, 20),
         "eligibility": "Girl students in class 12 pursuing STEM, income < 3.2 LPA",
         "category": "All",
         "state": "All India",
@@ -173,7 +171,7 @@ async def scrape_buddy4study() -> list:
         async with httpx.AsyncClient(timeout=15, headers={
             "User-Agent": "Mozilla/5.0 (compatible; ScholarshipHunter/1.0)"
         }) as client:
-            res = await client.get("https://www.buddy4study.com/page/scholarships-for-engineering-students")
+            res = await client.get(SCRAPE_SOURCES[0]["url"])
             soup = BeautifulSoup(res.text, "html.parser")
 
             cards = soup.find_all("div", class_=re.compile(r"scholarship.*card|card.*scholarship", re.I))[:5]

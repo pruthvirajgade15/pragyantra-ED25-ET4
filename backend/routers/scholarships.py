@@ -60,7 +60,7 @@ async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Schola
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             res = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}",
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={GEMINI_API_KEY}",
                 headers={"Content-Type": "application/json"},
                 json={"contents": [{"parts": [{"text": prompt}]}]}
             )
