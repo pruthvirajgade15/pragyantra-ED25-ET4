@@ -1,6 +1,6 @@
 
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 from typing import List, Optional
@@ -114,6 +114,7 @@ def rule_based_score(profile: StudentProfile, s: Scholarship) -> float:
 
     return min(score, 100.0)
 
+@router.get("", response_model=List[ScholarshipOut])
 @router.get("/", response_model=List[ScholarshipOut])
 async def list_scholarships(
     category: Optional[str] = None,
@@ -150,7 +151,7 @@ async def matched_scholarships(
     
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
     if not profile:
-        raise Exception("Profile not found. Please complete your profile first.")
+        raise HTTPException(status_code=400, detail="Profile not found. Please complete your profile first.")
 
     scholarships = db.query(Scholarship).filter(Scholarship.is_active == True).all()
 
@@ -208,7 +209,7 @@ def get_saved(db: Session = Depends(get_db), current_user: User = Depends(get_cu
 def get_scholarship(scholarship_id: int, db: Session = Depends(get_db)):
     s = db.query(Scholarship).filter(Scholarship.id == scholarship_id).first()
     if not s:
-        raise Exception("Scholarship not found")
+        raise HTTPException(status_code=404, detail="Scholarship not found")
     now = datetime.utcnow()
     return ScholarshipOut(
         id=s.id, name=s.name, provider=s.provider, amount=s.amount,

@@ -1,9 +1,9 @@
 
 
 import os
+# pyrefly: ignore [missing-import]
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Boolean, Text, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -142,27 +142,77 @@ def get_db():
         db.close()
 
 def init_db():
-    print("🔄 Connecting to database...")
+    print("[INIT] Connecting to database...")
     try:
         with engine.connect() as conn:
-            print("✅ Database connected!")
+            print("[OK] Database connected!")
     except Exception as e:
-        print(f"❌ Database connection failed: {e}")
-        print("💡 Check your DATABASE_URL in .env file")
+        print(f"[ERROR] Database connection failed: {e}")
+        print("[TIP] Check your DATABASE_URL in .env file")
         raise
 
     Base.metadata.create_all(bind=engine)
-    print("✅ Tables created!")
+    print("[OK] Tables created!")
 
     seed_scholarships()
-    print("✅ Database initialized")
+    seed_demo_user()
+    print("[OK] Database initialized")
+
+def seed_demo_user():
+    """Seed the demo user shown on the Login page (demo@scholar.in / demo1234) with an initial profile."""
+    db = SessionLocal()
+    try:
+        demo = db.query(User).filter(User.email == "demo@scholar.in").first()
+        if not demo:
+            import bcrypt
+            pw_bytes = "demo1234"[:72].encode("utf-8")
+            hashed = bcrypt.hashpw(pw_bytes, bcrypt.gensalt(rounds=12)).decode("utf-8")
+            demo = User(
+                name="Demo Student",
+                email="demo@scholar.in",
+                hashed_password=hashed,
+                language="en",
+            )
+            db.add(demo)
+            db.commit()
+            db.refresh(demo)
+            print("[OK] Demo user seeded (demo@scholar.in / demo1234)")
+
+        # Ensure demo user has a profile
+        profile = db.query(StudentProfile).filter(StudentProfile.user_id == demo.id).first()
+        if not profile:
+            profile = StudentProfile(
+                user_id=demo.id,
+                full_name="Demo Student",
+                annual_income=250000.0,
+                percentage=85.0,
+                category="OBC",
+                state="Maharashtra",
+                field_of_study="Engineering",
+                gender="Female",
+                dob="2003-05-15",
+                religion="Hindu",
+                disability=False,
+                is_minority=False,
+                current_year=2,
+                college="Government College of Engineering, Pune",
+                phone="9876543210"
+            )
+            db.add(profile)
+            db.commit()
+            print("[OK] Demo student profile seeded")
+    except Exception as e:
+        print(f"[WARN] Demo user seeding failed: {e}")
+        db.rollback()
+    finally:
+        db.close()
 
 def seed_scholarships():
     
     db = SessionLocal()
     try:
         if db.query(Scholarship).count() > 0:
-            print("ℹ️  Scholarships already seeded, skipping...")
+            print("[INFO] Scholarships already seeded, skipping...")
             db.close()
             return
 
@@ -412,10 +462,10 @@ def seed_scholarships():
         for s in scholarships:
             db.add(s)
         db.commit()
-        print(f"✅ Seeded {len(scholarships)} scholarships")
+        print(f"[OK] Seeded {len(scholarships)} scholarships")
 
     except Exception as e:
-        print(f"❌ Seeding failed: {e}")
+        print(f"[ERROR] Seeding failed: {e}")
         db.rollback()
     finally:
         db.close()

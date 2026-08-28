@@ -26,6 +26,7 @@ class ProfileRequest(BaseModel):
     college:        str  = ""
     phone:          Optional[str] = ""
 
+@router.post("")
 @router.post("/")
 def upsert_profile(req: ProfileRequest, db: Session = Depends(get_db),
                    current_user: User = Depends(get_current_user)):
@@ -40,6 +41,7 @@ def upsert_profile(req: ProfileRequest, db: Session = Depends(get_db),
     db.refresh(profile)
     return {"message": "Profile saved", "profile_id": profile.id}
 
+@router.get("")
 @router.get("/")
 def get_profile(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()

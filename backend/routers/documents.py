@@ -91,6 +91,7 @@ async def upload_document(
         "parsed_data": json.loads(new_doc.parsed_data or "{}")
     }
 
+@router.get("")
 @router.get("/")
 def get_documents(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     

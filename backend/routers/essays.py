@@ -65,7 +65,7 @@ async def generate_essay_with_gemini(
     try:
         async with httpx.AsyncClient(timeout=60) as client:
             res = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}",
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={GEMINI_API_KEY}",
                 headers={"Content-Type": "application/json"},
                 json={"contents": [{"parts": [{"text": prompt}]}]}
             )

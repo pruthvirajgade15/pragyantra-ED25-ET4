@@ -106,7 +106,7 @@ KNOWN_NEW_SCHOLARSHIPS = [
 
 def run_scraper():
     
-    logger.info("🕷️  Starting scholarship scraper...")
+    logger.info("[SCRAPER] Starting scholarship scraper...")
 
     try:
         from database.db import SessionLocal, Scholarship
@@ -123,9 +123,9 @@ def run_scraper():
                 s = Scholarship(**schol_data)
                 db.add(s)
                 added += 1
-                logger.info(f"  ✅ Added: {schol_data['name']}")
+                logger.info(f"  [+] Added: {schol_data['name']}")
             else:
-                logger.info(f"  ⏭️  Already exists: {schol_data['name']}")
+                logger.info(f"  [SKIP] Already exists: {schol_data['name']}")
 
         try:
             try:
@@ -159,10 +159,10 @@ def run_scraper():
 
         db.commit()
         db.close()
-        logger.info(f"✅ Scraper done. Added {added} new scholarships.")
+        logger.info(f"[OK] Scraper done. Added {added} new scholarships.")
 
     except Exception as e:
-        logger.error(f"❌ Scraper failed: {e}")
+        logger.error(f"[ERROR] Scraper failed: {e}")
 
 async def scrape_buddy4study() -> list:
     
@@ -206,6 +206,6 @@ def start_scheduler():
         replace_existing=True,
     )
     scheduler.start()
-    logger.info("⏰ Scraper scheduled: daily at 11:30 PM IST")
+    logger.info("[SCHEDULED] Scraper scheduled: daily at 11:30 PM IST")
 
     run_scraper()
