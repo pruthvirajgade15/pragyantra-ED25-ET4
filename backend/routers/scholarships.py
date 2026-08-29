@@ -56,25 +56,25 @@ async def get_ai_match_scores(profile: StudentProfile, scholarships: List[Schola
     Return a JSON dictionary mapping scholarship ID (as string) to match score (float 0-100). Only return valid JSON without any markdown formatting.
     """
 
-    try:
-        async with httpx.AsyncClient(timeout=30) as client:
-            res = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={GEMINI_API_KEY}",
-                headers={"Content-Type": "application/json"},
-                json={"contents": [{"parts": [{"text": prompt}]}]}
-            )
-            data = res.json()
-            if res.status_code == 200:
-                text = data["candidates"][0]["content"]["parts"][0]["text"]
-                import json, re
-                match = re.search(r'\{.*\}', text, re.DOTALL)
-                if match:
-                    scores = json.loads(match.group())
-                    return {int(k): float(v) for k, v in scores.items()}
-            else:
-                print(f"Gemini API matching error: {data}")
-    except Exception as e:
-        print(f"AI matching error: {e}")
+    models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+    for model_name in models:
+        try:
+            async with httpx.AsyncClient(timeout=20) as client:
+                res = await client.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={GEMINI_API_KEY}",
+                    headers={"Content-Type": "application/json"},
+                    json={"contents": [{"parts": [{"text": prompt}]}]}
+                )
+                data = res.json()
+                if res.status_code == 200:
+                    text = data["candidates"][0]["content"]["parts"][0]["text"]
+                    import json, re
+                    match = re.search(r'\{.*\}', text, re.DOTALL)
+                    if match:
+                        scores = json.loads(match.group())
+                        return {int(k): float(v) for k, v in scores.items()}
+        except Exception as e:
+            print(f"AI matching error on {model_name}: {e}")
     return {}
 
 def rule_based_score(profile: StudentProfile, s: Scholarship) -> float:
