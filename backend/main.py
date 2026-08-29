@@ -34,27 +34,18 @@ app = FastAPI(
 )
 
 # --- CORS ---
-# In production, set CORS_ORIGINS to a comma-separated list of allowed origins.
-# Example: CORS_ORIGINS=https://your-app.hf.space,https://yourdomain.com
-cors_origins_raw = os.getenv("CORS_ORIGINS", "*")
-if cors_origins_raw.strip() == "*":
-    # Wildcard: allow all origins but WITHOUT credentials (per CORS spec)
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=False,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-else:
-    allowed_origins = [o.strip() for o in cors_origins_raw.split(",") if o.strip()]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=allowed_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+# Automatically permits all Vercel deployments (*.vercel.app), localhost, and any custom domains in CORS_ORIGINS
+cors_origins_raw = os.getenv("CORS_ORIGINS", "")
+allowed_origins = [o.strip() for o in cors_origins_raw.split(",") if o.strip() and o.strip() != "*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app|http://localhost:\d+",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
