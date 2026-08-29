@@ -22,8 +22,8 @@ export default {
         }
       },
       fontFamily: {
-        display: ['"Sora"', 'sans-serif'],
-        body:    ['"DM Sans"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', '"Sora"', 'sans-serif'],
+        body:    ['"Inter"', '"DM Sans"', 'sans-serif'],
         hindi:   ['"Noto Sans Devanagari"', 'sans-serif'],
       },
       animation: {

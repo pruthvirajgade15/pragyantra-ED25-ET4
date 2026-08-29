@@ -1,174 +1,291 @@
-import { Link } from 'react-router-dom'
-import { GraduationCap, Zap, Clock, FileText, Globe2, RefreshCw, Smartphone, ArrowRight, Star, Users, TrendingUp, Shield, Sparkles, Bot } from 'lucide-react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Search, ArrowRight, ShieldCheck, Sparkles, Clock, FileText, Globe2, Bot, CheckCircle, IndianRupee, Users, Award, Star, ExternalLink } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTranslation } from '../i18n/translations'
 
+const POPULAR_PILLS = [
+  { label: 'Engineering / STEM', field: 'Engineering' },
+  { label: 'Medical & MBBS', field: 'Medical' },
+  { label: 'SC / ST Students', category: 'SC' },
+  { label: 'OBC / EWS Categories', category: 'OBC' },
+  { label: 'Girls in Tech', search: 'Girls' },
+  { label: 'Closing Soon', sort: 'deadline' },
+]
+
+const TRUST_LOGOS = [
+  { name: 'National Scholarship Portal (NSP)', desc: 'Central Schemes' },
+  { name: 'AICTE Pragati & Saksham', desc: 'Technical Education' },
+  { name: 'MahaDBT State Portal', desc: 'State Government' },
+  { name: 'DST INSPIRE Fellowship', desc: 'Science & Research' },
+  { name: 'UGC National Fellowships', desc: 'Higher Education' },
+]
+
 const FEATURES = [
-  { icon: Zap,        title: 'Smart AI Matching',     desc: 'Gemini AI matches you to scholarships based on income, marks, category, state and field of study.', color: 'sky' },
-  { icon: Clock,      title: 'Deadline Tracker',      desc: 'Never miss a deadline. Auto-alerts 7 days before every scholarship closes.', color: 'orange' },
-  { icon: FileText,   title: 'Essay Generator',        desc: 'Generate personalized application essays in Hindi and English in under 5 seconds.', color: 'violet' },
-  { icon: Globe2,     title: 'Hindi + English',        desc: 'Full bilingual support for rural and urban students across India.', color: 'emerald' },
-  { icon: RefreshCw,  title: 'Auto-Updated Daily',    desc: 'Web scraper runs every night to add new scholarships from NSP, Buddy4Study, AICTE.', color: 'rose' },
-  { icon: Bot,        title: 'AI Chatbot Assistant',   desc: 'Ask our AI anything about scholarships. Get personalized guidance based on your profile.', color: 'indigo' },
+  { 
+    icon: Sparkles, 
+    title: 'Eligibility & Win Probability Matcher', 
+    desc: 'Our rule-based & AI matching engine compares your category, income, marks, state, and branch with official criteria in seconds.' 
+  },
+  { 
+    icon: Clock, 
+    title: 'Live Deadline Tracker', 
+    desc: 'Never miss an application window. Get clear countdown alerts before scholarships close on NSP and state portals.' 
+  },
+  { 
+    icon: FileText, 
+    title: 'AI Scholarship Essay Studio', 
+    desc: 'Generate tailored statement of purpose and scholarship application essays in Hindi and English tailored to each scheme.' 
+  },
+  { 
+    icon: Bot, 
+    title: '24/7 AI Scholarship Advisor', 
+    desc: 'Ask questions in natural language about eligibility criteria, required certificates, and application steps.' 
+  },
 ]
 
 const STEPS = [
-  { num: '01', title: 'Fill Profile',      desc: 'Enter your income, marks, category, state — takes 30 seconds.', icon: '📝' },
-  { num: '02', title: 'AI Matches You',    desc: 'Gemini AI ranks all eligible scholarships by match percentage.', icon: '🤖' },
-  { num: '03', title: 'Generate Essay',    desc: 'One-click AI essay personalized to each scholarship.', icon: '✍️' },
-  { num: '04', title: 'Apply & Win',       desc: 'Direct link to official portal with document checklist.', icon: '🏆' },
+  {
+    step: '01',
+    title: 'Fill Your Student Profile',
+    desc: 'Enter your basic academic percentage, family income, category, and state once.',
+  },
+  {
+    step: '02',
+    title: 'Get Matched Scholarships',
+    desc: 'Instant match score and calculated win probability for every government and merit scheme.',
+  },
+  {
+    step: '03',
+    title: 'Apply Directly on Official Portals',
+    desc: 'One-click direct link to official government portals with required document checklists.',
+  },
 ]
 
 const TESTIMONIALS = [
-  { name: 'Priya S.', location: 'Pune, MH', text: 'I found 12 scholarships I never knew about! Got ₹50,000 from AICTE Pragati.', avatar: '👩‍🎓' },
-  { name: 'Rahul K.', location: 'Patna, BR', text: 'The AI matched me with NSP scholarship instantly. Applied in 5 minutes.', avatar: '👨‍💻' },
-  { name: 'Ananya T.', location: 'Bengaluru, KA', text: 'Essay generator saved me hours. Got shortlisted for Kotak Kanya!', avatar: '👩‍🏫' },
+  {
+    quote: "I never knew I was eligible for the AICTE Pragati scholarship until ScholarshipHunter matched my profile. Received ₹50,000 for my engineering tuition!",
+    name: "Priya S.",
+    role: "B.Tech Computer Engineering",
+    college: "Government College of Engineering, Pune",
+  },
+  {
+    quote: "The deadline tracker and Hindi bilingual option helped me submit my NSP post-matric form 5 days before the closing date with zero hassle.",
+    name: "Rahul K.",
+    role: "B.Sc Physics",
+    college: "Patna University, Bihar",
+  },
+  {
+    quote: "The essay studio generated a genuine, well-formatted statement of purpose that helped me secure the private merit grant. Truly student-focused.",
+    name: "Ananya T.",
+    role: "Commerce / CA Aspirant",
+    college: "Bengaluru, Karnataka",
+  }
 ]
 
 export default function HomePage() {
   const { user, lang } = useAuth()
   const { t } = useTranslation(lang)
+  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/scholarships?search=${encodeURIComponent(searchQuery.trim())}`)
+    } else {
+      navigate('/scholarships')
+    }
+  }
+
+  const handlePillClick = (pill) => {
+    const params = new URLSearchParams()
+    if (pill.field) params.set('field', pill.field)
+    if (pill.category) params.set('category', pill.category)
+    if (pill.search) params.set('search', pill.search)
+    navigate(`/scholarships?${params.toString()}`)
+  }
 
   return (
     <div className={`page-enter ${lang === 'hi' ? 'font-hindi' : ''}`}>
 
-      {}
-      <section className="hero-bg text-white py-24 sm:py-28 px-4">
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 hover:bg-white/15 transition-colors cursor-default">
-            <Star size={14} className="text-amber-400" />
-            <span>Powered by Gemini AI • Team Catalyst</span>
-            <Sparkles size={14} className="text-sky-300" />
+      {/* Hero Section */}
+      <section className="hero-gradient text-white pt-16 pb-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
+          
+          {/* Top Trust Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/80 text-xs font-semibold text-blue-300">
+            <ShieldCheck size={14} className="text-emerald-400" />
+            <span>100% Free & Verified Government & Merit Scholarships</span>
           </div>
 
-          <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-6 tracking-tight">
-            {t('hero_title')}
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-white font-display max-w-4xl mx-auto">
+            Find Scholarships You Actually Qualify For in <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">30 Seconds</span>
           </h1>
-          <p className="text-sky-100/90 text-lg sm:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-            {t('hero_subtitle')}
+
+          {/* Subtitle */}
+          <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            AI-powered matching for Indian students across all categories, states, and streams. Calculate your eligibility and apply directly on verified portals.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link to={user ? '/dashboard' : '/register'} className="btn-saffron text-base px-10 py-3.5 inline-flex items-center gap-2.5 group">
-              {t('hero_cta')} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/scholarships" className="bg-white/10 border border-white/30 text-white font-semibold px-10 py-3.5 rounded-xl hover:bg-white/20 transition-all inline-flex items-center gap-2.5 backdrop-blur-sm group">
-              Browse Scholarships <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-
-          {}
-          <div className="grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
-            {[
-              { val: t('hero_stat1'), label: t('hero_stat1_label') },
-              { val: t('hero_stat2'), label: t('hero_stat2_label') },
-              { val: t('hero_stat3'), label: t('hero_stat3_label') },
-            ].map(({ val, label }) => (
-              <div key={label} className="stat-card group cursor-default">
-                <div className="font-display font-extrabold text-2xl sm:text-3xl text-white group-hover:scale-105 transition-transform">{val}</div>
-                <div className="text-sky-200/80 text-xs sm:text-sm mt-1.5">{label}</div>
+          {/* Search Bar in Hero */}
+          <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto pt-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2 p-2 bg-white rounded-2xl shadow-xl border border-slate-200">
+              <div className="flex items-center gap-2.5 px-3 w-full">
+                <Search size={18} className="text-slate-400 flex-shrink-0" />
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by degree, branch (Engineering, Medical), category, or portal..."
+                  className="w-full text-slate-800 placeholder-slate-400 text-sm focus:outline-none py-1.5"
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {}
-      <section className="py-16 px-4 bg-gradient-to-b from-sky-50/80 to-white relative section-dot-grid">
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="glass-card p-10 text-center">
-            <div className="text-6xl mb-5">👩‍🎓</div>
-            <blockquote className="font-display font-semibold text-xl sm:text-2xl text-slate-700 leading-relaxed">
-              "Meet <span className="text-sky-600">Priya</span> — she qualifies for{' '}
-              <span className="saffron-text font-bold">12 scholarships worth ₹2.4 Lakhs</span>{' '}
-              but has never heard of any of them."
-            </blockquote>
-            <p className="text-slate-500 mt-5 text-base leading-relaxed">ScholarshipHunter AI finds Priya's scholarships in 30 seconds. We built this for every Priya in India.</p>
-            <Link to={user ? '/dashboard' : '/register'} className="btn-primary mt-7 inline-flex items-center gap-2.5 group">
-              Find My Scholarships <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {}
-      <section className="py-20 px-4 bg-white relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-100 rounded-full px-4 py-1.5 text-sm font-semibold text-sky-600 mb-4">
-              <Sparkles size={14} /> Platform Features
+              <button 
+                type="submit"
+                className="btn-primary w-full sm:w-auto px-6 py-2.5 text-sm font-semibold flex items-center justify-center gap-1.5 flex-shrink-0"
+              >
+                Search Scholarships <ArrowRight size={15} />
+              </button>
             </div>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-800 mb-3">
-              Everything You Need to <span className="gradient-text">Win Scholarships</span>
-            </h2>
-            <p className="text-slate-500 text-lg max-w-xl mx-auto">One platform. Six powerful features. Zero cost.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map(({ icon: Icon, title, desc, color }) => (
-              <div key={title} className="glass-card feature-card p-7 flex flex-col gap-4 group">
-                <div className={`w-12 h-12 rounded-2xl bg-${color}-50 border border-${color}-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={24} className={`text-${color}-600`} />
-                </div>
-                <h3 className="font-display font-semibold text-slate-800 text-lg">{title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed flex-1">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {}
-      <section className="py-20 px-4 bg-gradient-to-b from-slate-50 to-white relative section-dot-grid">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-violet-50 border border-violet-100 rounded-full px-4 py-1.5 text-sm font-semibold text-violet-600 mb-4">
-              <Shield size={14} /> Simple Process
+            {/* Popular Quick Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
+              <span className="text-slate-400 font-medium">Popular:</span>
+              {POPULAR_PILLS.map((pill) => (
+                <button
+                  key={pill.label}
+                  type="button"
+                  onClick={() => handlePillClick(pill)}
+                  className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition-colors"
+                >
+                  {pill.label}
+                </button>
+              ))}
             </div>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-800 mb-3">
-              How It <span className="gradient-text">Works</span>
+          </form>
+
+        </div>
+      </section>
+
+      {/* Verified Portals Trust Bar */}
+      <section className="bg-slate-900 border-b border-slate-800 py-6 px-4">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-center text-xs font-semibold text-slate-400 tracking-wider uppercase mb-4">
+            Direct Data & Official Links from Verified Government & Private Portals
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-slate-300 text-xs font-medium">
+            {TRUST_LOGOS.map((portal) => (
+              <div key={portal.name} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/50 border border-slate-800">
+                <CheckCircle size={14} className="text-blue-400 flex-shrink-0" />
+                <div>
+                  <span className="font-semibold text-white block leading-tight">{portal.name}</span>
+                  <span className="text-[10px] text-slate-400">{portal.desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+              Simple 3-Step Process
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
+              How ScholarshipHunter Works For You
             </h2>
-            <p className="text-slate-500 text-lg">From profile to application in under 2 minutes</p>
+            <p className="text-slate-500 text-sm">
+              We eliminate endless portal searching and confusing government notifications.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {STEPS.map(({ num, title, desc, icon }, idx) => (
-              <div key={num} className="glass-card p-7 text-center relative group">
-                <div className="text-4xl mb-4">{icon}</div>
-                <div className="font-display font-extrabold text-5xl gradient-text mb-3 opacity-20 absolute top-3 right-4">{num}</div>
-                <h3 className="font-display font-semibold text-slate-800 mb-2 text-lg">{title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
-                {idx < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 text-2xl z-10">→</div>
-                )}
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {STEPS.map((item) => (
+              <div key={item.step} className="surface-card p-6 relative group hover:border-blue-300">
+                <div className="text-3xl font-extrabold text-blue-100 font-display mb-3 group-hover:text-blue-200 transition-colors">
+                  {item.step}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 font-display">
+                  {item.title}
+                </h3>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
               </div>
             ))}
+          </div>
+
+          <div className="text-center pt-4">
+            <Link to={user ? "/dashboard" : "/register"} className="btn-primary px-8 py-3 text-sm">
+              Get Started Free <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>
 
-      {}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-800 mb-3">
-              Students <span className="gradient-text">Love Us</span>
+      {/* Core Platform Capabilities */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+              Complete Discovery Suite
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
+              Engineered For Student Success
             </h2>
-            <p className="text-slate-500 text-lg">Real stories from scholarship winners</p>
+            <p className="text-slate-500 text-sm">
+              Everything required to discover, track deadlines, write statements, and submit verified applications.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {TESTIMONIALS.map(({ name, location, text, avatar }) => (
-              <div key={name} className="glass-card p-7 flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center text-2xl shadow-sm">
-                    {avatar}
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {FEATURES.map((feat) => {
+              const Icon = feat.icon
+              return (
+                <div key={feat.title} className="surface-card p-6 space-y-3 bg-white">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <Icon size={20} />
                   </div>
-                  <div>
-                    <div className="font-display font-semibold text-slate-800">{name}</div>
-                    <div className="text-xs text-slate-400">{location}</div>
-                  </div>
+                  <h3 className="font-bold text-slate-900 text-base font-display">
+                    {feat.title}
+                  </h3>
+                  <p className="text-slate-500 text-xs leading-relaxed">
+                    {feat.desc}
+                  </p>
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed italic">"{text}"</p>
-                <div className="flex gap-0.5 text-amber-400">
-                  {'★★★★★'.split('').map((s, i) => <span key={i}>{s}</span>)}
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
+              Trusted by Students Across India
+            </h2>
+            <p className="text-slate-500 text-sm">
+              Real stories from students who unlocked financial support for their education.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className="surface-card p-6 space-y-4 flex flex-col justify-between bg-slate-50/50">
+                <p className="text-slate-700 text-sm italic leading-relaxed">
+                  "{t.quote}"
+                </p>
+                <div className="pt-3 border-t border-slate-200/80">
+                  <div className="font-bold text-slate-900 text-sm">{t.name}</div>
+                  <div className="text-xs text-blue-600 font-medium">{t.role}</div>
+                  <div className="text-xs text-slate-500">{t.college}</div>
                 </div>
               </div>
             ))}
@@ -176,50 +293,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {}
-      <section className="py-20 px-4 bg-gradient-to-b from-white to-slate-50">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-800 mb-12">
-            Real <span className="gradient-text">Impact</span>
+      {/* Bottom CTA Banner */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 text-white text-center">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <h2 className="text-3xl sm:text-4xl font-extrabold font-display">
+            Ready to Find Every Scholarship You Deserve?
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              { icon: Users,      stat: '16 Cr+',  label: 'Students in India eligible for scholarships', color: 'sky' },
-              { icon: TrendingUp, stat: '< 30 sec', label: 'Time to find matching scholarships via AI',   color: 'green' },
-              { icon: FileText,   stat: '5 sec',    label: 'Time to generate a full application essay',   color: 'orange' },
-            ].map(({ icon: Icon, stat, label, color }) => (
-              <div key={stat} className={`glass-card p-8 border-t-4 border-${color}-400 group`}>
-                <div className={`w-14 h-14 rounded-2xl bg-${color}-50 border border-${color}-100 flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={28} className={`text-${color}-600`} />
-                </div>
-                <div className={`font-display font-extrabold text-4xl text-${color}-600 mb-2`}>{stat}</div>
-                <p className="text-slate-500 text-sm leading-relaxed">{label}</p>
-              </div>
-            ))}
+          <p className="text-slate-300 text-base max-w-xl mx-auto">
+            Create your free student account in 30 seconds. No subscription fees, no middlemen.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <Link to={user ? "/dashboard" : "/register"} className="btn-saffron px-8 py-3 text-sm font-semibold">
+              Find My Scholarships Now <ArrowRight size={16} />
+            </Link>
+            <Link to="/scholarships" className="btn-secondary py-3 px-6 text-sm bg-white/10 text-white border-white/20 hover:bg-white/20">
+              Browse All Schemes
+            </Link>
           </div>
         </div>
       </section>
 
-      {}
-      <section className="hero-bg py-24 px-4 text-white text-center">
-        <div className="max-w-2xl mx-auto relative z-10">
-          <GraduationCap size={56} className="mx-auto mb-5 text-sky-300 opacity-80" />
-          <h2 className="font-display font-extrabold text-3xl sm:text-5xl mb-5 leading-tight">
-            Find every scholarship<br />you deserve.
-          </h2>
-          <p className="text-sky-100/80 text-lg mb-10">AI-powered. Auto-updated. 100% Free.</p>
-          <Link to={user ? '/dashboard' : '/register'} className="btn-saffron text-lg px-12 py-4 inline-flex items-center gap-2.5 group">
-            {t('hero_cta')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <p className="text-sky-300/60 text-sm mt-5">No credit card. No fees. Ever.</p>
-        </div>
-      </section>
-
-      {}
-      <footer className="bg-slate-900 text-slate-400 text-sm text-center py-8 px-4">
-        <p>Built with ❤️ by <span className="text-sky-400 font-semibold">Team Catalyst</span> — Modern College of Engineering, Pune</p>
-        <p className="mt-1.5 text-slate-500">PRAGYANTRA Hackathon 2025 • Powered by Gemini AI (Google)</p>
-      </footer>
     </div>
   )
 }

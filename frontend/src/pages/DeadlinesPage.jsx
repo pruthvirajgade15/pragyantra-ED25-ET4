@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Clock, ExternalLink, AlertTriangle, Bell, Calendar, CheckCircle } from 'lucide-react'
+import { Clock, ExternalLink, AlertTriangle, Bell, Calendar, CheckCircle, ShieldAlert } from 'lucide-react'
 import { deadlineAPI } from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import { useTranslation } from '../i18n/translations'
 
 export default function DeadlinesPage() {
-  const { lang }              = useAuth()
-  const { t }                 = useTranslation(lang)
+  const { lang } = useAuth()
+  const { t } = useTranslation(lang)
   const [deadlines, setDeadlines] = useState([])
   const [summary, setSummary] = useState({})
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter]   = useState('all')
+  const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     const load = async () => {
@@ -18,154 +18,185 @@ export default function DeadlinesPage() {
         const [d, s] = await Promise.all([deadlineAPI.upcoming(), deadlineAPI.summary()])
         setDeadlines(d.data)
         setSummary(s.data)
-      } catch (e) {}
-      setLoading(false)
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [])
 
   const filtered = filter === 'all' ? deadlines
-    : filter === 'critical' ? deadlines.filter(d => d.days_left <= 3)
-    : filter === 'urgent'   ? deadlines.filter(d => d.days_left <= 7 && d.days_left > 3)
-    : deadlines.filter(d => d.days_left > 7)
+    : filter === 'critical' ? deadlines.filter(d => d.days_left != null && d.days_left <= 3)
+    : filter === 'urgent'   ? deadlines.filter(d => d.days_left != null && d.days_left <= 7 && d.days_left > 3)
+    : deadlines.filter(d => d.days_left == null || d.days_left > 7)
 
-  const getUrgencyConfig = (urgency, days) => {
-    if (urgency === 'critical' || days <= 3) return {
-      bg: 'bg-red-50 border-red-200', badge: 'bg-red-100 text-red-700',
-      icon: AlertTriangle, iconColor: 'text-red-500', label: '⚠️ Critical'
-    }
-    if (urgency === 'urgent' || days <= 7) return {
-      bg: 'bg-amber-50 border-amber-200', badge: 'bg-amber-100 text-amber-700',
-      icon: Bell, iconColor: 'text-amber-500', label: '🔔 This Week'
-    }
-    return {
-      bg: 'bg-green-50 border-green-200', badge: 'bg-green-100 text-green-700',
-      icon: Calendar, iconColor: 'text-green-500', label: '📅 Upcoming'
-    }
-  }
-
-  const formatDate = (d) => new Date(d).toLocaleString('en-IN', {
-    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true
+  const formatDate = (d) => new Date(d).toLocaleDateString('en-IN', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
   })
 
-  const CountdownCircle = ({ days }) => {
-    const maxDays = 30
-    const pct = Math.max(0, Math.min(100, ((maxDays - days) / maxDays) * 100))
-    const color = days <= 3 ? '#ef4444' : days <= 7 ? '#f97316' : '#22c55e'
-    const r = 18, circ = 2 * Math.PI * r
-    const dashoffset = circ - (pct / 100) * circ
-
-    return (
-      <div className="relative w-14 h-14 flex-shrink-0 flex items-center justify-center">
-        <svg className="absolute -rotate-90" width="56" height="56">
-          <circle cx="28" cy="28" r={r} fill="none" stroke="#e2e8f0" strokeWidth="4" />
-          <circle cx="28" cy="28" r={r} fill="none" stroke={color} strokeWidth="4"
-            strokeDasharray={circ} strokeDashoffset={dashoffset}
-            strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease' }} />
-        </svg>
-        <div className="text-center z-10">
-          <div className="font-display font-bold text-sm leading-none" style={{ color }}>{days}</div>
-          <div className="text-slate-400 text-[9px]">days</div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className={`page-enter max-w-4xl mx-auto px-4 sm:px-6 py-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
-      {}
-      <div className="flex items-start gap-4 mb-8">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg flex-shrink-0">
-          <Clock size={22} className="text-white" />
-        </div>
+    <div className={`page-enter max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 ${lang === 'hi' ? 'font-hindi' : ''}`}>
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-100 rounded-full px-4 py-1 text-xs font-semibold text-orange-600 mb-2">
-            ⏰ Live Tracking
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200 mb-2">
+            <Clock size={13} /> Real-Time Application Schedule
           </div>
-          <h1 className="font-display font-bold text-2xl sm:text-3xl text-slate-800">{t('deadlines_title')}</h1>
-          <p className="text-slate-500 text-sm mt-1">Never miss a scholarship deadline</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">
+            Scholarship Deadline Tracker
+          </h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Track exact closing dates across National Scholarship Portal, state portals, and university merit schemes.
+          </p>
         </div>
       </div>
 
-      {}
-      {!loading && (
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {[
-            { val: summary.expiring_in_7_days || 0,  label: 'Closing this week',  color: 'red',    icon: AlertTriangle },
-            { val: summary.expiring_in_30_days || 0, label: 'Closing this month', color: 'orange', icon: Bell },
-            { val: summary.total_scholarships || 0,  label: 'Total active',       color: 'green',  icon: CheckCircle },
-          ].map(({ val, label, color, icon: Icon }) => (
-            <div key={label} className={`glass-card p-4 text-center border-t-4 border-${color}-400`}>
-              <div className={`font-display font-bold text-2xl text-${color}-600`}>{val}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{label}</div>
-            </div>
-          ))}
+      {/* Summary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="surface-card p-5 border-l-4 border-l-rose-500 space-y-1">
+          <span className="text-xs font-semibold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
+            <AlertTriangle size={14} /> Closing This Week (&le; 7d)
+          </span>
+          <div className="text-3xl font-extrabold text-slate-900 font-display">
+            {summary.expiring_in_7_days || 0}
+          </div>
+          <p className="text-[11px] text-slate-400">Requires immediate submission</p>
         </div>
-      )}
 
-      {}
-      <div className="flex gap-1 p-1 bg-slate-100 rounded-xl mb-6 w-fit flex-wrap">
+        <div className="surface-card p-5 border-l-4 border-l-amber-500 space-y-1">
+          <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
+            <Bell size={14} /> Closing This Month (&le; 30d)
+          </span>
+          <div className="text-3xl font-extrabold text-slate-900 font-display">
+            {summary.expiring_in_30_days || 0}
+          </div>
+          <p className="text-[11px] text-slate-400">Prepare documents now</p>
+        </div>
+
+        <div className="surface-card p-5 border-l-4 border-l-emerald-500 space-y-1">
+          <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+            <CheckCircle size={14} /> Total Active Schemes
+          </span>
+          <div className="text-3xl font-extrabold text-slate-900 font-display">
+            {summary.total_scholarships || 0}
+          </div>
+          <p className="text-[11px] text-slate-400">Verified official schemes</p>
+        </div>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto">
         {[
-          { key: 'all',      label: `All (${deadlines.length})` },
-          { key: 'critical', label: `⚠️ Critical (${deadlines.filter(d => d.days_left <= 3).length})` },
-          { key: 'urgent',   label: `🔔 This Week (${deadlines.filter(d => d.days_left <= 7 && d.days_left > 3).length})` },
-          { key: 'upcoming', label: `📅 Later (${deadlines.filter(d => d.days_left > 7).length})` },
+          { key: 'all',      label: `All Schemes (${deadlines.length})` },
+          { key: 'critical', label: `⚠️ Critical < 3 Days (${deadlines.filter(d => d.days_left != null && d.days_left <= 3).length})` },
+          { key: 'urgent',   label: `🔔 This Week (${deadlines.filter(d => d.days_left != null && d.days_left <= 7 && d.days_left > 3).length})` },
+          { key: 'upcoming', label: `📅 Later (${deadlines.filter(d => d.days_left == null || d.days_left > 7).length})` },
         ].map(({ key, label }) => (
-          <button key={key} onClick={() => setFilter(key)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-              filter === key ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-            }`}>{label}</button>
+          <button 
+            key={key} 
+            onClick={() => setFilter(key)}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+              filter === key 
+                ? 'bg-slate-900 text-white shadow-xs' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            {label}
+          </button>
         ))}
       </div>
 
-      {}
+      {/* Deadline Items List */}
       {loading ? (
         <div className="space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="glass-card p-5 flex gap-4">
-              <div className="skeleton w-14 h-14 rounded-full" />
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="surface-card p-5 flex gap-4">
+              <div className="skeleton w-12 h-12 rounded-xl" />
               <div className="flex-1 space-y-2">
-                <div className="skeleton h-4 w-3/4" />
+                <div className="skeleton h-5 w-3/4" />
                 <div className="skeleton h-3 w-1/2" />
               </div>
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-slate-400">
-          <Clock size={48} className="mx-auto mb-3 opacity-40" />
-          <p className="text-lg font-medium">No deadlines in this category</p>
+        <div className="surface-card p-12 text-center space-y-3">
+          <Calendar size={36} className="text-slate-300 mx-auto" />
+          <h3 className="text-base font-bold text-slate-800">No deadlines in this category</h3>
+          <p className="text-xs text-slate-500">Check the "All Schemes" tab to view all open application schedules.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map(d => {
-            const cfg = getUrgencyConfig(d.urgency, d.days_left)
-            return (
-              <div key={d.id} className={`rounded-2xl border p-5 flex items-center gap-4 transition-all hover:shadow-md ${cfg.bg}`}>
-                <CountdownCircle days={d.days_left} />
+            const isCritical = d.days_left != null && d.days_left <= 3
+            const isUrgent = d.days_left != null && d.days_left <= 7
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <h3 className="font-semibold text-slate-800 text-sm leading-snug line-clamp-2">{d.name}</h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${cfg.badge}`}>
-                      {cfg.label}
-                    </span>
+            return (
+              <div 
+                key={d.id} 
+                className={`surface-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-slate-300 ${
+                  isCritical 
+                    ? 'border-l-4 border-l-rose-500 bg-rose-50/20' 
+                    : isUrgent 
+                      ? 'border-l-4 border-l-amber-500 bg-amber-50/20' 
+                      : ''
+                }`}
+              >
+                {/* Left side: Countdown Badge + Details */}
+                <div className="flex items-start gap-4 min-w-0">
+                  <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center flex-shrink-0 font-display ${
+                    isCritical 
+                      ? 'bg-rose-100 text-rose-700 font-extrabold' 
+                      : isUrgent 
+                        ? 'bg-amber-100 text-amber-800 font-bold' 
+                        : 'bg-slate-100 text-slate-700 font-semibold'
+                  }`}>
+                    <span className="text-sm leading-none">{d.days_left != null ? d.days_left : '—'}</span>
+                    <span className="text-[9px] uppercase font-medium">days</span>
                   </div>
-                  <p className="text-xs text-slate-500">{d.provider} • {d.amount}</p>
-                  <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
-                    <Calendar size={11} /> {formatDate(d.deadline)}
-                  </p>
+
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+                        {d.provider}
+                      </span>
+                      {isCritical && (
+                        <span className="text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full">
+                          ⚠️ Closing in {d.days_left}d
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-display font-bold text-slate-900 text-base leading-snug line-clamp-1">
+                      {d.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 flex items-center gap-3">
+                      <span className="font-semibold text-emerald-700">₹{d.amount}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1">
+                        <Calendar size={12} /> Deadline: {formatDate(d.deadline)}
+                      </span>
+                    </p>
+                  </div>
                 </div>
 
-                <a href={d.official_link} target="_blank" rel="noopener noreferrer"
-                  className="flex-shrink-0 btn-primary text-xs py-2 px-3 flex items-center gap-1">
-                  Apply <ExternalLink size={11} />
+                {/* Right Action: Apply Now */}
+                <a 
+                  href={d.official_link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-primary text-xs py-2 px-4 whitespace-nowrap self-stretch sm:self-auto flex items-center justify-center gap-1.5"
+                >
+                  Apply on Portal <ExternalLink size={13} />
                 </a>
               </div>
             )
           })}
         </div>
       )}
+
     </div>
   )
 }
