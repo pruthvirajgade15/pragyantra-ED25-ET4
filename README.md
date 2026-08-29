@@ -1,419 +1,284 @@
----
-title: ScholarshipHunter AI
-emoji: 🎓
-colorFrom: blue
-colorTo: purple
-sdk: docker
-app_port: 7860
-pinned: true
-license: mit
-short_description: AI-powered scholarship discovery & prioritization platform
----
+# 🎓 ScholarshipHunter AI — Industry-Ready Scholarship Discovery Platform
 
-# 🎓 ScholarshipHunter AI
-### *Find every scholarship you deserve. AI-powered. Auto-updated. 100% Free.*
+<div align="center">
 
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.111-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_18.3-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
-[![Vite](https://img.shields.io/badge/Bundler-Vite_6.0-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
-[![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind_3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
-[![Google Gemini](https://img.shields.io/badge/AI-Google_Gemini-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
-[![Docker](https://img.shields.io/badge/Deployment-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://pragyantra-ed-25-et-4-udn4.vercel.app)
+[![Render Backend](https://img.shields.io/badge/Render-API_Active-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://scholarship-hunter-backend.onrender.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Google Gemini](https://img.shields.io/badge/AI-Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
+[![Tests Passing](https://img.shields.io/badge/Tests-43%2F43_Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/pruthvirajgade15/pragyantra-ED25-ET4)
+
+<br />
+
+**Find every scholarship you deserve. AI-powered. Auto-updated. 100% Free.**
+
+[🌐 Explore Live Website](https://pragyantra-ed-25-et-4-udn4.vercel.app) • [📖 Interactive Swagger API](https://scholarship-hunter-backend.onrender.com/docs) • [🩺 Health Check](https://scholarship-hunter-backend.onrender.com/health) • [Report Bug](https://github.com/pruthvirajgade15/pragyantra-ED25-ET4/issues)
+
+</div>
 
 ---
 
-## 📌 Overview
+## 📌 Executive Summary & About
 
-**ScholarshipHunter AI** is an intelligent, bilingual (English & Hindi) scholarship discovery and application assistant designed for students across India, with a focus on underrepresented and underprivileged communities. 
+In India, over **₹2,000+ Crores** in central, state, and corporate scholarships go unclaimed annually. Eligible students—especially from rural, underrepresented, and economically disadvantaged backgrounds—miss out due to scattered portals (NSP, AICTE, state portals like MahaDBT), labyrinthine eligibility PDFs, and missed application deadlines.
 
-Over **₹2,000+ Crores** in scholarships go unclaimed every year in India due to scattered portals, complex eligibility criteria, and tedious application processes. ScholarshipHunter AI bridges this gap with an automated multi-source scraper, a hybrid AI matching engine, secure document parsing, auto-filling, AI essay generation, and an interactive real-time scholarship advisor chatbot.
+**ScholarshipHunter AI** is an enterprise-grade, bilingual (**English & Hindi**) platform built to democratize scholarship access. It unifies automated discovery, AI-driven personalized match scoring, win-probability forecasting, an encrypted document vault, an AI essay generator, and an 24/7 scholarship advisor chatbot into a seamless user experience.
+
+### 🔗 Live Deployments
+- **Production Web Application (Vercel)**: [https://pragyantra-ed-25-et-4-udn4.vercel.app](https://pragyantra-ed-25-et-4-udn4.vercel.app)
+- **Production Backend API (Render)**: [https://scholarship-hunter-backend.onrender.com](https://scholarship-hunter-backend.onrender.com)
+- **API Documentation (Swagger UI)**: [https://scholarship-hunter-backend.onrender.com/docs](https://scholarship-hunter-backend.onrender.com/docs)
+- **Backend Health Check**: [https://scholarship-hunter-backend.onrender.com/health](https://scholarship-hunter-backend.onrender.com/health)
 
 ---
 
-## 🌟 Value Proposition
+## 🌟 Key Value Proposition
 
-| Capability | Traditional Portals | ScholarshipHunter AI |
+| Capability | Traditional Scholarship Portals | ScholarshipHunter AI |
 |---|---|---|
-| **Scholarship Discovery** | Static lists with outdated links | **Real-time multi-source scraper & government API sync** |
-| **Eligibility Verification** | Manual reading of complex PDFs | **Hybrid ML & rule-based match scoring (0–100%)** |
-| **Prioritization Engine** | Chronological / Random sorting | **AI win probability & competition level ranking** |
-| **Document Management** | Re-uploading on every application | **Encrypted vault + AI Vision auto-extract & auto-fill** |
-| **Essay Assistance** | External generic templates | **Context-aware AI generator (Hindi & English)** |
-| **Chat Assistant** | None / Static FAQ bots | **Profile-aware Google Gemini assistant** |
-| **Deadline Tracking** | Basic dates | **Dynamic visual urgency countdowns & alerts** |
-| **Language Inclusivity** | English only | **Full English & Hindi localization (UI & Content)** |
+| **Discovery** | Static, outdated text links | **Live directory with instant search & dynamic filter chips** |
+| **Eligibility Verification** | Complex 40-page PDF notifications | **Deep inspection modal with criteria matrix & document checklists** |
+| **Prioritization Engine** | Chronological or random sorting | **AI win-probability & competition rank calculation** |
+| **Document Management** | Re-uploading on every application | **Encrypted vault with AI Vision auto-extract & profile sync** |
+| **Essay Assistance** | External generic templates | **Context-aware AI generator (Hindi & English) with instant word count** |
+| **Advisor Chatbot** | None or static rule trees | **Bilingual AI advisor with verified scholarship database fallback** |
+| **Deadline Tracking** | Basic static dates | **Urgency countdown badges (Critical ≤3d, Soon ≤7d, Later)** |
+| **Student Safety** | Scam risk from third-party agents | **"100% Free" student safety advisory with direct verified portal links** |
 
 ---
 
-## 🏗️ System Architecture
+## 🚀 Feature Highlights
+
+### 1. 🔍 Instant Search & Multi-Filter Directory
+- Real-time instant search with debounce across scholarship names, providers, and descriptions.
+- Multi-dimensional sidebar filters: **Category** (General, SC, ST, OBC, Minority, EWS), **State** (All India, Maharashtra, UP, Karnataka, etc.), **Field of Study** (Engineering, Medical, Science, Arts), and **Sorting** (Match Score, Deadline, Amount).
+- Interactive active filter chips with 1-click removal and reset.
+- Toggle between Grid and Compact List views.
+
+### 2. 📋 Deep Inspection Modal
+- Detailed modal popup presenting:
+  - Exact financial benefit with currency formatting (`₹50,000 / year`).
+  - Days-remaining countdown badge with color-coded urgency.
+  - 4-point eligibility criteria matrix (Category, State, Academic percentage, Field).
+  - Standard required documents checklist (Aadhaar, income certificate, marksheet, etc.).
+  - Direct, verified CTA to official application portals (NSP, AICTE, DST).
+
+### 3. ✍️ Bilingual AI Essay Studio
+- Split-screen workspace for generating tailored scholarship essays and Statements of Purpose (SOP).
+- Language support in professional **English** and **Hindi (Devanagari)**.
+- Target word count slider (150 – 800 words) with real-time word counter.
+- One-click copy to clipboard and `.txt` file download.
+- Persistent draft history drawer with auto-save to user profile.
+
+### 4. 🤖 24/7 AI Scholarship Advisor
+- Floating conversational assistant built directly into the student dashboard.
+- Backed by Google Gemini AI with **smart fallback logic** that queries active database records when external APIs are rate-limited.
+- Answers eligibility questions, deadline alerts, document requirements, and portal registration steps.
+- Fully responsive design engineered to fit all screen viewports comfortably.
+
+### 5. 🗄️ Encrypted Document Vault
+- Drag-and-drop file upload zone supporting PDF, PNG, and JPG documents.
+- 10MB file size guard and MIME type validation.
+- Metadata key-value cards showing document categories and upload timestamps.
+
+### 6. ⏰ Dynamic Deadline Monitor
+- Chronological tracker grouped by urgency:
+  - 🔴 **Critical:** Closing in &le; 3 days.
+  - 🟡 **This Week:** Closing in &le; 7 days.
+  - 🟢 **Upcoming:** Closing later.
+- Direct "Apply Before Deadline" deep links to official portals.
+
+---
+
+## 🏗️ Architecture & Technology Stack
 
 ```mermaid
 graph TD
     User([👤 Student / User])
 
-    subgraph Frontend ["Frontend Layer (React 18 + Vite + TailwindCSS)"]
-        UI[Bilingual Responsive UI - EN / HI]
-        Dashboard[AI Dashboard & Match Visualizer]
-        DocVault[Encrypted Document Vault]
-        ChatWidget[Interactive AI Chatbot Assistant]
-        EssayGen[AI Essay Studio]
-        DeadlineTracker[Visual Deadline Monitor]
+    subgraph CDN ["Vercel Edge Network (Global CDN)"]
+        FrontendSPA["React 18 + Vite SPA (Client Routing via vercel.json)"]
     end
 
-    subgraph Gateway ["API Gateway (FastAPI 0.111)"]
-        AuthService[JWT Authentication & RBAC]
-        Proxy[CORS & Static Asset Engine]
+    subgraph Compute ["Render Cloud Service (Web Service)"]
+        FastAPIGateway["FastAPI 0.111 ASGI Gateway"]
+        AuthModule["JWT Security & Bcrypt Hashing"]
+        AIService["Gemini AI Fallback Chain (2.5-flash-lite / 2.5-flash / 1.5-flash)"]
+        ScraperEngine["APScheduler + BeautifulSoup Automated Scrapers"]
     end
 
-    subgraph BackendEngine ["Backend Services"]
-        Matcher[Hybrid Match Scoring Engine]
-        Prioritizer[Win Probability & Competition Ranker]
-        DocParser[Gemini Vision Document Parser]
-        EssayService[Bilingual Essay Synthesis Engine]
-        ChatEngine[Contextual Multi-turn Chat Agent]
-        ScraperScheduler[APScheduler + BeautifulSoup + NSP API]
+    subgraph DataStore ["Database Layer"]
+        DB[(PostgreSQL / SQLite via SQLAlchemy 2.0 Pool)]
     end
 
-    subgraph ExternalServices ["External Services & AI"]
-        GeminiAPI[Google Gemini 2.0 / 2.5 Flash API]
-        GovNSP[NSP & State Gov Portals]
-    end
+    User <-->|HTTPS / TLS| FrontendSPA
+    FrontendSPA <-->|REST API / JSON| FastAPIGateway
+    FastAPIGateway <--> AuthModule
+    FastAPIGateway <--> AIService
+    FastAPIGateway <--> ScraperEngine
+    FastAPIGateway <--> DB
+    ScraperEngine -->|Sync Scholarships| DB
+```
 
-    subgraph Database ["Data Persistence"]
-        DB[(SQLite / PostgreSQL via SQLAlchemy)]
-    end
+### Technology Breakdown
+- **Frontend**: React 18, Vite 6, Tailwind CSS 3.4, React Router 6, Lucide React, React Hot Toast, Axios.
+- **Backend**: FastAPI 0.111, Uvicorn, SQLAlchemy 2.0, Psycopg2-binary, Pydantic v2, Python-Jose (JWT), Passlib (Bcrypt), Httpx, APScheduler.
+- **AI & NLP**: Google Gemini 2.5 Flash Lite API with localized rule-based knowledge fallback.
+- **Hosting & Infrastructure**:
+  - **Frontend**: Vercel (Edge Network, zero-config SPA rewrites).
+  - **Backend**: Render Web Service (Python 3.10, dynamic `$PORT` binding on `0.0.0.0`).
+  - **Database**: Render Managed PostgreSQL / SQLite with connection pooling (`pool_pre_ping=True`, `pool_recycle=300`).
 
-    User <--> UI
-    UI <--> Dashboard & DocVault & ChatWidget & EssayGen & DeadlineTracker
-    Dashboard & DocVault & ChatWidget & EssayGen & DeadlineTracker <--> Proxy
-    Proxy <--> AuthService
-    AuthService <--> Matcher & Prioritizer & DocParser & EssayService & ChatEngine
-    DocParser & EssayService & ChatEngine & Matcher <--> GeminiAPI
-    ScraperScheduler <--> GovNSP
-    ScraperScheduler --> DB
-    Matcher & Prioritizer & AuthService --> DB
+---
+
+## 🧪 Automated Testing & Verification
+
+The backend includes a comprehensive automated test suite with **100% pass rate** across all routes, security barriers, and business logic:
+
+```bash
+& "backend/venv/Scripts/python.exe" -m pytest backend/tests/test_api.py -v
+```
+
+```text
+============================= test session starts =============================
+platform win32 -- Python 3.10.11, pytest-9.1.1, pluggy-1.6.0
+collected 43 items
+
+backend/tests/test_api.py::TestAuth::test_health PASSED                  [  2%]
+backend/tests/test_api.py::TestAuth::test_register_success PASSED        [  4%]
+backend/tests/test_api.py::TestAuth::test_register_duplicate_email PASSED [  6%]
+backend/tests/test_api.py::TestAuth::test_register_short_password PASSED [  9%]
+backend/tests/test_api.py::TestAuth::test_register_long_password PASSED  [ 11%]
+backend/tests/test_api.py::TestAuth::test_login_success PASSED           [ 13%]
+backend/tests/test_api.py::TestAuth::test_login_wrong_password PASSED    [ 16%]
+backend/tests/test_api.py::TestAuth::test_login_nonexistent_email PASSED [ 18%]
+backend/tests/test_api.py::TestAuth::test_me_authenticated PASSED        [ 20%]
+backend/tests/test_api.py::TestAuth::test_me_unauthenticated PASSED      [ 23%]
+backend/tests/test_api.py::TestAuth::test_me_invalid_token PASSED        [ 25%]
+backend/tests/test_api.py::TestProfile::test_get_profile_empty PASSED    [ 27%]
+backend/tests/test_api.py::TestProfile::test_save_profile PASSED         [ 30%]
+backend/tests/test_api.py::TestProfile::test_get_profile_after_save PASSED [ 32%]
+backend/tests/test_api.py::TestProfile::test_update_profile PASSED       [ 34%]
+backend/tests/test_api.py::TestProfile::test_profile_unauthenticated PASSED [ 37%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_public PASSED [ 39%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_with_search PASSED [ 41%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_with_category_filter PASSED [ 44%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_with_state_filter PASSED [ 46%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_with_field_filter PASSED [ 48%]
+backend/tests/test_api.py::TestScholarships::test_list_scholarships_with_limit PASSED [ 51%]
+backend/tests/test_api.py::TestScholarships::test_get_scholarship_not_found PASSED [ 53%]
+backend/tests/test_api.py::TestScholarships::test_save_scholarship PASSED [ 55%]
+backend/tests/test_api.py::TestScholarships::test_save_scholarship_duplicate PASSED [ 58%]
+backend/tests/test_api.py::TestScholarships::test_get_saved_scholarships PASSED [ 60%]
+backend/tests/test_api.py::TestScholarships::test_matched_scholarships PASSED [ 62%]
+backend/tests/test_api.py::TestDeadlines::test_upcoming_deadlines PASSED [ 65%]
+backend/tests/test_api.py::TestDeadlines::test_deadline_summary PASSED   [ 67%]
+backend/tests/test_api.py::TestDeadlines::test_upcoming_deadline_fields PASSED [ 69%]
+backend/tests/test_api.py::TestDocuments::test_list_documents_empty PASSED [ 72%]
+backend/tests/test_api.py::TestDocuments::test_upload_invalid_extension PASSED [ 74%]
+backend/tests/test_api.py::TestDocuments::test_upload_valid_image PASSED [ 76%]
+backend/tests/test_api.py::TestDocuments::test_delete_document PASSED    [ 79%]
+backend/tests/test_api.py::TestDocuments::test_auto_fill PASSED          [ 81%]
+backend/tests/test_api.py::TestDocuments::test_documents_unauthenticated PASSED [ 83%]
+backend/tests/test_api.py::TestRecommendations::test_prioritize_requires_profile PASSED [ 86%]
+backend/tests/test_api.py::TestChat::test_chat_without_api_key PASSED    [ 88%]
+backend/tests/test_api.py::TestChat::test_chat_unauthenticated PASSED    [ 90%]
+backend/tests/test_api.py::TestEssay::test_get_drafts PASSED             [ 93%]
+backend/tests/test_api.py::TestEssay::test_get_nonexistent_draft PASSED  [ 95%]
+backend/tests/test_api.py::TestEssay::test_delete_nonexistent_draft PASSED [ 97%]
+backend/tests/test_api.py::TestEssay::test_essays_unauthenticated PASSED [100%]
+
+======================= 43 passed, 1 warning in 12.02s ========================
 ```
 
 ---
 
-## ✨ Key Features
-
-### 1. 🤖 Hybrid Match Scoring Engine
-- Evaluates student attributes (annual income, marks percentage, category, state, field of study, gender, disability, minority status) against database criteria.
-- Uses **Google Gemini 2.0 Flash Lite** for deep contextual scoring with instant fallback to a deterministic multi-variable rule-based matcher.
-
-### 2. 🏆 Scholarship Prioritization & Win Probability
-- Computes priority scores based on:
-  - **Win Probability**: Adjusted for national vs. state quotas and user profile strengths.
-  - **Competition Index**: High (National/NSP), Medium (Private foundations), Low (State/Domicile-specific).
-  - **Award Value vs. Urgency**: Balances financial reward against application effort and deadline proximity.
-
-### 3. 📁 Secure Document Vault & AI Auto-Fill
-- Supports upload of Income Certificates, 10th/12th Marksheets, Caste/Disability Certificates, and IDs (PDF, PNG, JPG).
-- Uses **Gemini Vision** to automatically extract structured metadata (names, marks, roll numbers, income limits).
-- Provides an aggregated `/auto-fill` payload for seamless scholarship form completion.
-
-### 4. ✍️ Bilingual AI Essay Studio
-- Synthesizes personalized Statement of Purpose (SOP) and financial need essays in **English** or **Hindi (Devanagari script)**.
-- Integrates student background, career aspirations, and specific scholarship parameters.
-- Includes draft versioning, word count validation, and local fallback generation.
-
-### 5. 💬 Interactive AI Scholarship Chatbot
-- Multi-turn conversation agent powered by Google Gemini.
-- Ingests user profile and real-time scholarship catalog to deliver personalized eligibility guidance, document preparation checklists, and application tips.
-
-### 6. ⏰ Real-time Deadline Tracker & Urgency Engine
-- Categorizes scholarships into **Critical** (<=3 days), **Urgent** (<=7 days), and **Normal** (Upcoming).
-- Visual countdown badges and dashboard alert banners prevent missed deadlines.
-
-### 7. 🕷️ Autonomous Multi-Source Scraper
-- Scheduled daily at **11:30 PM IST** via APScheduler.
-- Scrapes portals like **Buddy4Study**, integrates **National Scholarship Portal (NSP)** schemes, and state portals (e.g., MahaDBT).
-- De-duplicates records before updating the database.
-
----
-
-## 📁 Repository Structure
-
-```
-pragyantra-ED25-ET4/
-├── backend/
-│   ├── database/
-│   │   ├── __init__.py
-│   │   └── db.py                 # SQLAlchemy ORM models, DB init & seeding
-│   ├── routers/
-│   │   ├── __init__.py
-│   │   ├── auth.py               # JWT registration, login & /me endpoints
-│   │   ├── chat.py               # Gemini-powered interactive chatbot router
-│   │   ├── deadlines.py          # Deadline countdown & summary statistics
-│   │   ├── documents.py          # Document upload, Gemini Vision OCR & auto-fill
-│   │   ├── essays.py             # Bilingual AI essay generator & draft CRUD
-│   │   ├── profile.py            # Student profile schema & persistence
-│   │   ├── recommendations.py    # Priority ranking & win probability engine
-│   │   └── scholarships.py       # Scholarship listing, AI matching & saved items
-│   ├── scraper/
-│   │   ├── __init__.py
-│   │   ├── bs4_scraper.py        # BeautifulSoup scraper for state scholarship schemes
-│   │   ├── gov_api.py            # Government API integration & normalization
-│   │   └── scheduler.py          # APScheduler background runner & live scraper
-│   ├── .env.example              # Backend environment template
-│   ├── Dockerfile                # Backend standalone Dockerfile
-│   ├── main.py                   # FastAPI entrypoint, middleware & SPA mount
-│   ├── migrate.py                # Database migration utility
-│   └── requirements.txt          # Python production dependencies
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Chatbot.jsx       # Floating AI scholarship assistant
-│   │   │   ├── DocumentVault.jsx # Document upload, preview & extracted tags
-│   │   │   ├── Navbar.jsx        # Responsive navigation & language toggle
-│   │   │   └── ScholarshipCard.jsx # Match badge, urgency tracker & save action
-│   │   ├── hooks/
-│   │   │   └── useAuth.jsx       # Auth context, session persistence & i18n
-│   │   ├── i18n/
-│   │   │   └── translations.js   # Complete English & Hindi dictionary
-│   │   ├── pages/
-│   │   │   ├── DashboardPage.jsx # AI-ranked recommendations & metrics
-│   │   │   ├── DeadlinesPage.jsx # Urgent deadline calendar view
-│   │   │   ├── DocumentsPage.jsx # Student document vault page
-│   │   │   ├── EssayPage.jsx     # AI essay generation studio & drafts
-│   │   │   ├── HomePage.jsx      # High-conversion landing page
-│   │   │   ├── LoginPage.jsx     # Login & registration authentication views
-│   │   │   ├── ProfilePage.jsx   # Detailed student profile questionnaire
-│   │   │   └── ScholarshipsPage.jsx # Search & multi-filter catalogue
-│   │   ├── utils/
-│   │   │   └── api.js            # Axios client with JWT interceptors
-│   │   ├── App.jsx               # Protected routes & global providers
-│   │   ├── index.css             # Tailwind design system & animations
-│   │   └── main.jsx              # React DOM entry point
-│   ├── .env.example              # Frontend environment template
-│   ├── index.html                # HTML5 root with Google Fonts (Sora, DM Sans, Devanagari)
-│   ├── package.json              # Node dependencies & scripts
-│   ├── tailwind.config.js        # Brand color themes & typography
-│   └── vite.config.js            # Vite bundler & reverse proxy configuration
-│
-├── .dockerignore
-├── .gitignore
-├── Dockerfile                    # Multi-stage production container build
-└── README.md                     # Project documentation
-```
-
----
-
-## 🛠️ Technology Stack
-
-| Domain | Technology | Version | Purpose |
-|---|---|---|---|
-| **Frontend Framework** | React | 18.3.1 | Component-based dynamic user interface |
-| **Bundler & Tooling** | Vite | 6.0.0 | High-performance build tool & HMR |
-| **CSS Framework** | TailwindCSS | 3.4.4 | Utility-first responsive design system |
-| **Routing** | React Router | 7.18.2 | Client-side routing & protected route guards |
-| **Icons & UI** | Lucide React | 0.383.0 | Modern SVG iconography |
-| **Notifications** | React Hot Toast | 2.4.1 | Fluid toast notifications |
-| **Backend Framework** | FastAPI | 0.111.0+ | High-throughput asynchronous REST API |
-| **ASGI Server** | Uvicorn | 0.30.1+ | Lightning-fast ASGI production server |
-| **ORM / Database** | SQLAlchemy | 2.0.30+ | Object-relational mapping & schema management |
-| **Database** | SQLite / PostgreSQL | — | Relational data store |
-| **Authentication** | python-jose + bcrypt | 3.3.0 / 4.0.0+ | Secure JWT tokens & salted password hashing |
-| **AI / Vision / Chat** | Google Gemini API | 2.0 / 2.5 Flash | Multimodal intelligence, matching, essays & chat |
-| **Web Scraping** | BeautifulSoup4 + Requests | 4.12.3 / 2.31.0+ | HTML parsing & portal crawling |
-| **Job Scheduling** | APScheduler | 3.10.4 | Cron-like automated background tasks |
-| **Containerization** | Docker | Multi-stage | Isolated reproducible production container |
-
----
-
-## 🔌 API Reference
-
-| Module | Method | Endpoint | Auth | Description |
-|---|---|---|:---:|---|
-| **System** | `GET` | `/health` | No | Service health check |
-| **Auth** | `POST` | `/api/auth/register` | No | Create user account & receive JWT |
-| | `POST` | `/api/auth/login` | No | Authenticate credentials & receive JWT |
-| | `GET` | `/api/auth/me` | Yes | Retrieve authenticated user profile |
-| **Scholarships** | `GET` | `/api/scholarships` | No | Browse catalogue with search & filters |
-| | `GET` | `/api/scholarships/matched` | Yes | Get personalized AI-matched scholarships |
-| | `GET` | `/api/scholarships/{id}` | No | Get single scholarship details |
-| | `POST` | `/api/scholarships/save` | Yes | Save a scholarship to student profile |
-| | `GET` | `/api/scholarships/saved` | Yes | Retrieve saved scholarships |
-| **Recommendations** | `GET` | `/api/recommendations/prioritize` | Yes | Prioritized rankings with win probability |
-| **Profile** | `GET` | `/api/profile` | Yes | Fetch student profile details |
-| | `POST` | `/api/profile` | Yes | Upsert student profile attributes |
-| **Documents** | `GET` | `/api/documents` | Yes | List uploaded vault documents |
-| | `POST` | `/api/documents/upload` | Yes | Upload document (PDF/Image) & run Vision OCR |
-| | `DELETE` | `/api/documents/{id}` | Yes | Delete document from vault |
-| | `POST` | `/api/documents/auto-fill` | Yes | Aggregate extracted data for form auto-fill |
-| **Essays** | `POST` | `/api/essays/generate` | Yes | Generate tailored essay in EN or HI |
-| | `GET` | `/api/essays/drafts` | Yes | List saved essay drafts |
-| | `GET` | `/api/essays/drafts/{id}` | Yes | Retrieve specific essay draft |
-| | `DELETE` | `/api/essays/drafts/{id}` | Yes | Delete essay draft |
-| **Deadlines** | `GET` | `/api/deadlines/upcoming` | Yes | Get sorted upcoming deadlines with urgency |
-| | `GET` | `/api/deadlines/summary` | No | Get global deadline metrics |
-| **Chatbot** | `POST` | `/api/chat/ask` | Yes | Interactive multi-turn AI chat |
-
----
-
-## 🚀 Quick Start Guide
+## ⚙️ Local Development Setup
 
 ### Prerequisites
-- **Python**: 3.10 or higher
-- **Node.js**: 18.0 or higher
-- **Google Gemini API Key**: [Get a free API key from Google AI Studio](https://aistudio.google.com/)
+- **Node.js**: v18.0.0 or later
+- **Python**: v3.10.0 or later
+- **Git**
 
----
+### 1. Clone the Repository
+```bash
+git clone https://github.com/pruthvirajgade15/pragyantra-ED25-ET4.git
+cd pragyantra-ED25-ET4
+```
 
-### 1. Clone & Set Up Backend
-
+### 2. Backend Setup
 ```bash
 cd backend
 
-# Create & activate virtual environment
+# Create virtual environment
 python -m venv venv
 
-# Windows:
-venv\Scripts\activate
-# Linux/macOS:
-# source venv/bin/activate
+# Activate virtual environment
+# On Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+# On macOS / Linux:
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Configure environment variables
+# Create local environment configuration
 cp .env.example .env
-# Edit .env and set your GEMINI_API_KEY and SECRET_KEY
+# Edit .env and insert your GEMINI_API_KEY and SECRET_KEY
 
 # Start backend server
 python main.py
+# Backend runs at http://localhost:7860 (API docs at http://localhost:7860/docs)
 ```
-- **Backend API**: `http://localhost:7860`
-- **Interactive Swagger Docs**: `http://localhost:7860/docs`
-- *Note: On first startup, the database is auto-created, 20+ scholarships and a demo user are seeded, and the initial scraper routine executes.*
 
----
-
-### 2. Set Up Frontend
-
+### 3. Frontend Setup
 ```bash
-cd frontend
+cd ../frontend
 
 # Install dependencies
 npm install
 
-# Configure environment variables (defaults to /api proxy)
-cp .env.example .env
-
-# Start development server
+# Start Vite dev server
 npm run dev
-```
-- **Frontend Application**: `http://localhost:5173`
-
----
-
-### 3. Demo Credentials
-
-You can explore the platform immediately using the pre-seeded demo account:
-- **Email**: `demo@scholar.in`
-- **Password**: `demo1234`
-- *Includes pre-configured student profile (Engineering, 85% score, Maharashtra domicile, OBC category).*
-
----
-
-## 🐳 Docker Deployment
-
-### Multi-Stage Unified Container (Recommended)
-
-The root `Dockerfile` builds both the React frontend and FastAPI backend into a single self-contained, production-ready container:
-
-```bash
-# Build the Docker image
-docker build -t scholarship-hunter-ai .
-
-# Run the container
-docker run -d \
-  -p 7860:7860 \
-  -e GEMINI_API_KEY="your-gemini-api-key" \
-  -e SECRET_KEY="your-production-secret-key" \
-  --name scholarship-hunter \
-  scholarship-hunter-ai
-```
-Access the complete application at `http://localhost:7860`.
-
----
-
-## 🌐 Deploy to Hugging Face Spaces
-
-### Method A: Single Full-Stack Docker Space (Easiest)
-1. Create a new Space on [Hugging Face](https://huggingface.co/new-space).
-2. Select SDK: **Docker**.
-3. Upload the entire project repository.
-4. In **Settings -> Variables and secrets**, add:
-   - `GEMINI_API_KEY` = your Google Gemini API key
-   - `SECRET_KEY` = random 32-character string
-5. The container builds and deploys automatically on port 7860!
-
-### Method B: Decoupled Architecture
-1. **Backend (Docker Space)**: Deploy the `backend/` directory as a Docker space. Add secrets `GEMINI_API_KEY` and `SECRET_KEY`.
-2. **Frontend (Static Space)**: In `frontend/.env`, set `VITE_API_URL=https://<your-backend-space>.hf.space/api`. Run `npm run build` and upload `frontend/dist/` to a Static Hugging Face Space.
-
----
-
-## 🔐 Environment Configuration
-
-| Variable | Scope | Required | Description | Default |
-|---|---|:---:|---|---|
-| `GEMINI_API_KEY` | Backend | Optional | Google Gemini API key for AI features | Fallback rule-based |
-| `SECRET_KEY` | Backend | **Yes** | Secret key used for signing JWT tokens | `scholarship2025secret` |
-| `DATABASE_URL` | Backend | No | SQLite file or PostgreSQL connection URI | `sqlite:///./scholarship.db` |
-| `PORT` | Backend | No | Port on which FastAPI binds | `7860` |
-| `HOST` | Backend | No | Host IP on which FastAPI binds | `0.0.0.0` |
-| `VITE_API_URL` | Frontend | No | Base backend API endpoint URL | `/api` |
-
----
-
-## 🧪 Testing & Verification
-
-The project includes an end-to-end verification test suite covering authentication, profile operations, recommendation ranking, deadline tracking, and document handling:
-
-```bash
-# Run API verification suite against running backend
-python backend/scratch/test_api.py
-```
-
-```
-=== Test Suite Results ===
-  [PASS] GET /health
-  [PASS] POST /auth/register
-  [PASS] POST /auth/login
-  [PASS] GET /auth/me
-  [PASS] POST /profile (upsert)
-  [PASS] GET /profile (zero 307 redirects)
-  [PASS] GET /scholarships (catalogue listing)
-  [PASS] GET /scholarships/matched (AI scoring)
-  [PASS] GET /recommendations/prioritize (win probability)
-  [PASS] POST /scholarships/save & GET /scholarships/saved
-  [PASS] GET /deadlines/upcoming & /summary
-  [PASS] POST /essays/generate & /drafts
-  [PASS] Negative authorization & validation checks
-TOTAL: 29/29 Tests Passed (100% Success)
+# Frontend runs at http://localhost:5173
 ```
 
 ---
 
-## 👥 Team Catalyst
+## 🚢 Production Deployment Guide
 
-Developed with passion by **Team Catalyst** — Department of Artificial Intelligence & Data Science, **Modern College of Engineering, Pune**:
+### Deploy Backend on Render
+1. Open [dashboard.render.com](https://dashboard.render.com) and click **New +** → **Blueprint**.
+2. Connect your GitHub repository.
+3. Render automatically detects [`render.yaml`](./render.yaml) and provisions:
+   - `scholarship-hunter-backend` (FastAPI Web Service)
+   - `scholarship-hunter-db` (PostgreSQL Database)
+4. Add your `GEMINI_API_KEY` and set `CORS_ORIGINS` to `*` or your Vercel URL.
+5. Click **Apply**. Render assigns your backend URL: `https://scholarship-hunter-backend.onrender.com`.
 
-- **Sanika Chowdhary**
-- **Amar Bhise**
-- **Sattvik Bhogade**
-- **Pruthaviraj Gade**
-
-*PRAGYANTRA 2026*
+### Deploy Frontend on Vercel
+1. Open [vercel.com](https://vercel.com) and click **Add New...** → **Project**.
+2. Select `pragyantra-ED25-ET4`.
+3. Under **Root Directory**, click *Edit* and select `frontend`.
+4. Under **Environment Variables**, add:
+   - **Key**: `VITE_API_URL`
+   - **Value**: `https://scholarship-hunter-backend.onrender.com/api`
+5. Click **Deploy**. Vercel will build and launch your site in ~35 seconds.
 
 ---
 
-## 📄 License
+## 🔒 Security & Best Practices
+- **Scam Prevention**: Prominent safety banner informing students that genuine government schemes are 100% free and to never pay application fees to third-party agents.
+- **Safe Authentication**: Passwords hashed with `bcrypt`; stateless JWT tokens with expiration handling.
+- **Restricted File Uploads**: 10MB size limit enforcement and whitelist of valid extensions (`.pdf`, `.jpg`, `.png`).
+- **Dynamic CORS Guard**: Automatically validates `*.vercel.app` origins with credential support while rejecting unauthorized third-party domains.
+- **SQLAlchemy SQL Injection Immunity**: Parameterized ORM queries across all endpoints.
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+---
+
+## 📜 License & Credits
+- **License**: Released under the [MIT License](LICENSE).
+- **Developers**: Developed with ❤️ for Indian students by **Pruthviraj Gade** and contributors.
