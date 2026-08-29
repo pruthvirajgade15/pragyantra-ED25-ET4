@@ -33,13 +33,28 @@ app = FastAPI(
     redirect_slashes=False,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# --- CORS ---
+# In production, set CORS_ORIGINS to a comma-separated list of allowed origins.
+# Example: CORS_ORIGINS=https://your-app.hf.space,https://yourdomain.com
+cors_origins_raw = os.getenv("CORS_ORIGINS", "*")
+if cors_origins_raw.strip() == "*":
+    # Wildcard: allow all origins but WITHOUT credentials (per CORS spec)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    allowed_origins = [o.strip() for o in cors_origins_raw.split(",") if o.strip()]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -73,4 +88,6 @@ else:
         return {"message": "ScholarshipHunter AI is running 🎓", "status": "ok"}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=7860, reload=True)
+    port = int(os.getenv("PORT", "7860"))
+    host = os.getenv("HOST", "0.0.0.0")
+    uvicorn.run("main:app", host=host, port=port, reload=os.getenv("RELOAD", "false").lower() == "true")

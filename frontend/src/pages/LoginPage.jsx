@@ -2,8 +2,8 @@ import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { GraduationCap, Eye, EyeOff, ArrowRight, Sparkles, Shield, Zap } from 'lucide-react'
 import toast from 'react-hot-toast'
-
-const API = import.meta.env.VITE_API_URL || 'http://localhost:7860/api'
+import { useAuth } from '../hooks/useAuth'
+import { authAPI } from '../utils/api'
 
 function AuthLayout({ children, side }) {
   return (
@@ -52,6 +52,7 @@ function AuthLayout({ children, side }) {
 export function LoginPage() {
   const [showPw,  setShowPw]  = useState(false)
   const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
   const navigate  = useNavigate()
   const emailRef  = useRef(null)
   const pwRef     = useRef(null)
@@ -63,20 +64,14 @@ export function LoginPage() {
     if (!email || !password) return
     setLoading(true)
     try {
-      const res = await fetch(`${API}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ username: email, password }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || 'Login failed')
+      const { data } = await authAPI.login(email, password)
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(data))
       localStorage.setItem('lang', data.language || 'en')
       toast.success('Welcome back! 🎓')
       window.location.href = '/dashboard'
     } catch (err) {
-      toast.error(err.message || 'Invalid credentials')
+      toast.error(err.response?.data?.detail || err.message || 'Invalid credentials')
     } finally {
       setLoading(false)
     }
@@ -150,20 +145,14 @@ export function RegisterPage() {
     if (password.length > 70){ toast.error('Password too long (max 70)'); return }
     setLoading(true)
     try {
-      const res = await fetch(`${API}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, language }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || 'Registration failed')
+      const { data } = await authAPI.register({ name, email, password, language })
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(data))
       localStorage.setItem('lang', language)
       toast.success('Account created! 🎓')
       window.location.href = '/profile'
     } catch (err) {
-      toast.error(err.message || 'Registration failed')
+      toast.error(err.response?.data?.detail || err.message || 'Registration failed')
     } finally {
       setLoading(false)
     }

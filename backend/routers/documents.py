@@ -25,11 +25,17 @@ async def upload_document(
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in [".jpg", ".jpeg", ".png", ".pdf"]:
         raise HTTPException(status_code=400, detail="Only JPG, PNG and PDF allowed")
+
+    contents = await file.read()
+
+    # BUG-04 fix: enforce 10MB file size limit
+    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+    if len(contents) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail=f"File too large. Maximum size is 10MB, got {len(contents) / (1024*1024):.1f}MB")
         
     unique_filename = f"{uuid.uuid4()}{file_ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
     
-    contents = await file.read()
     with open(file_path, "wb") as f:
         f.write(contents)
         

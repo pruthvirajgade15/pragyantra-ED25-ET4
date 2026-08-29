@@ -31,8 +31,7 @@ class ScholarshipOut(BaseModel):
     match_score:  Optional[float] = None
     days_left:    Optional[int]   = None
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class SaveRequest(BaseModel):
     scholarship_id: int
@@ -134,7 +133,7 @@ async def list_scholarships(
     now = datetime.utcnow()
     result = []
     for s in scholarships:
-        days_left = (s.deadline - now).days if s.deadline else None
+        days_left = max(0, (s.deadline - now).days) if s.deadline else None
         result.append(ScholarshipOut(
             id=s.id, name=s.name, provider=s.provider, amount=s.amount,
             deadline=s.deadline, eligibility=s.eligibility, category=s.category,
@@ -194,10 +193,13 @@ def save_scholarship(req: SaveRequest, db: Session = Depends(get_db),
 
 @router.get("/saved")
 def get_saved(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    saved = db.query(SavedScholarship).filter(SavedScholarship.user_id == current_user.id).all()
+    from sqlalchemy.orm import joinedload
+    saved = db.query(SavedScholarship).options(
+        joinedload(SavedScholarship.scholarship)
+    ).filter(SavedScholarship.user_id == current_user.id).all()
     result = []
     for s in saved:
-        sch = db.query(Scholarship).filter(Scholarship.id == s.scholarship_id).first()
+        sch = s.scholarship
         if sch:
             result.append({"saved_id": s.id, "match_score": s.match_score, "status": s.status,
                            "scholarship": {"id": sch.id, "name": sch.name, "provider": sch.provider,
@@ -216,5 +218,5 @@ def get_scholarship(scholarship_id: int, db: Session = Depends(get_db)):
         deadline=s.deadline, eligibility=s.eligibility, category=s.category,
         state=s.state, field=s.field, official_link=s.official_link,
         description=s.description, source=s.source,
-        days_left=(s.deadline - now).days if s.deadline else None
+        days_left=max(0, (s.deadline - now).days) if s.deadline else None
     )

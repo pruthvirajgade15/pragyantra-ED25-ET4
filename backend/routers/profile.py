@@ -31,11 +31,12 @@ class ProfileRequest(BaseModel):
 def upsert_profile(req: ProfileRequest, db: Session = Depends(get_db),
                    current_user: User = Depends(get_current_user)):
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
+    req_data = req.model_dump() if hasattr(req, "model_dump") else req.dict()
     if profile:
-        for k, v in req.dict().items():
+        for k, v in req_data.items():
             setattr(profile, k, v)
     else:
-        profile = StudentProfile(user_id=current_user.id, **req.dict())
+        profile = StudentProfile(user_id=current_user.id, **req_data)
         db.add(profile)
     db.commit()
     db.refresh(profile)
