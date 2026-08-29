@@ -19,7 +19,6 @@ lib/
 lib64/
 parts/
 sdist/
-var/
 wheels/
 *.egg-info/
 .installed.cfg
@@ -28,6 +27,12 @@ wheels/
 # Virtual Environments
 venv/
 ENV/
+.venv/
+
+# Testing & caches
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Node modules
 node_modules/
@@ -39,19 +44,25 @@ node_modules/
 .env.test.local
 .env.production.local
 
-# IDEs
+# IDEs & OS
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS files
 .DS_Store
 Thumbs.db
 
-# Backend database and uploads
-backend/*.db
-backend/uploads/
+# Database & SQLite files
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+test_scholarship.db
+backend/scholarship.db
+
+# Uploads & local storage
+backend/uploads/*
+!backend/uploads/.gitkeep
 backend/document_vault/
 
 # Frontend build
