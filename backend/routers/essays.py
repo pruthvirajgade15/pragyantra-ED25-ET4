@@ -49,11 +49,16 @@ async def generate_essay_with_gemini(
     
     profile_context = ""
     if profile:
+        full_name = getattr(profile, 'full_name', None) or 'Student'
+        field_of_study = getattr(profile, 'field_of_study', None) or 'General'
+        percentage = getattr(profile, 'percentage', None) or 80
+        annual_income = getattr(profile, 'annual_income', None) or '2,50,000'
+        state = getattr(profile, 'state', None) or 'India'
+        category = getattr(profile, 'category', None) or 'General'
         profile_context = f"""
-        Student: {profile.full_name or 'Student'}, Education Level: {profile.education_level or 'Undergraduate'},
-        Field: {profile.field_of_study or 'General'}, Marks: {profile.marks_percentage or 80}%,
-        Family Income: Rs {profile.annual_income or '2,50,000'}/year, State: {profile.state or 'India'},
-        Category: {profile.category or 'General'}.
+        Student: {full_name}, Field: {field_of_study},
+        Marks: {percentage}%, Family Income: Rs {annual_income}/year,
+        State: {state}, Category: {category}.
         """
 
     extra_context = ""
@@ -113,9 +118,10 @@ def generate_fallback_essay(
     goals: str = "",
     achievements: str = ""
 ) -> str:
-    name = profile.full_name if profile and profile.full_name else "a dedicated student"
-    field = profile.field_of_study if profile and profile.field_of_study else "my academic field"
-    marks = f"{profile.marks_percentage}%" if profile and profile.marks_percentage else "consistent academic merit"
+    name = (profile.full_name if profile and profile.full_name else None) or "a dedicated student"
+    field = (profile.field_of_study if profile and profile.field_of_study else None) or "my academic field"
+    percentage = profile.percentage if profile and profile.percentage else None
+    marks = f"{percentage}%" if percentage else "consistent academic merit"
     
     if language == "hi":
         return f"""मैं यह आवेदन {scholarship_name} के लिए अत्यंत विनम्रता और सम्मान के साथ प्रस्तुत कर रहा हूँ। एक समर्पित छात्र के रूप में, मैंने हमेशा अपनी शिक्षा और व्यक्तिगत विकास को प्राथमिकता दी है।
